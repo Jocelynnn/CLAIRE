@@ -1,0 +1,88 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row">
+        <nav class="col-md-3 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="{% url 'show_retrievals'%}">
+                  <span data-feather="home"></span>
+                  My rankers <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="file"></span>
+                  Orders
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="bar-chart-2"></span>
+                  Reports
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="layers"></span>
+                  Integrations
+                </a>
+              </li>
+            </ul>
+
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+              <span>Saved retrieval algorithms</span>
+              <a class="d-flex align-items-center text-muted" href="#">
+                <span data-feather="plus-circle"></span>
+              </a>
+            </h6>
+            <ul class="nav flex-column mb-2">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'show_configs' 'Okapi BM25'%}">
+                  <span data-feather="file-text"></span>
+                  Okapi BM25
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'show_configs' 'PVT'%}">
+                  <span data-feather="file-text"></span>
+                  Pivoted Length Normalization
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'show_configs' 'Dirichlet'%}">
+                  <span data-feather="file-text"></span>
+                  Dirichlet Prior Smoothing
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'show_configs' 'JM'%}">
+                  <span data-feather="file-text"></span>
+                  Jelinek-Mercer Smoothing
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'show_configs' 'Absolute Discount'%}">
+                  <span data-feather="file-text"></span>
+                  Absolute Discount Smoothing
+                </a>
+              </li>
+            </ul>
+        </nav>
+
+        {% block config %}
+        {% endblock %}
+  </div>
+
+  </div>    
+
+
+<!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace()
+    </script>
+{% endblock %}
