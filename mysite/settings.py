@@ -25,7 +25,7 @@ SECRET_KEY = '6-0*^0e-w6*z3#&4$!h5h2$7aes0@s@1@a#8fq+0smh)lmo6f0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['bingjie3.pythonanywhere.com',]
 
 
 # Application definition
