@@ -4,6 +4,13 @@ from .models import Post
 from .models import RetrievalMethod
 from .config_forms import bm25Form,jmForm,dpForm,plForm,adForm
 from django.shortcuts import redirect
+import metapy
+import json
+import time
+import os
+from django.conf import settings
+
+
 
 
 # Create your views here.
@@ -55,5 +62,66 @@ def save_configs(request, name):
     return render(request, 'retrieval/configs.html', {'name': name, 'form': curt_form})
 
 
-def create_search_engine(request, name):
-    return render(request,'application/demo.html',{'name': name})
+def create_search_engine(request, ranker):
+    cfg = 'IRLab/search-config.toml'
+    cfg = os.path.join(settings.BASE_DIR, cfg)
+
+    if request.method == 'POST':
+        # searcher.search(request)
+        print('inside create enginee!!!!')
+        print(request.POST.get('query_text', None))
+        print(request.POST.get('ranker', None))
+        searcher = Searcher(cfg)
+        searcher.search(request)
+
+    return render(request,'application/demo.html',{'ranker': ranker})
+
+
+
+class Searcher:
+    """
+    Wraps the MeTA search engine and its rankers.
+    """
+    def __init__(self, cfg):
+        """
+        Create/load a MeTA inverted index based on the provided config file and
+        set the default ranking algorithm to Okapi BM25.
+        """
+        self.idx = metapy.index.make_inverted_index(cfg)
+        print(self.idx.num_docs())
+        print(self.idx.unique_terms())
+        print(self.idx.total_corpus_terms())
+        self.default_ranker = metapy.index.OkapiBM25()
+
+    def search(self, request):
+        """
+        Accept a JSON request and run the provided query with the specified
+        ranker.
+        """
+        start = time.time()
+        print(start)
+        query = metapy.index.Document()
+        query.content(request.POST.get('query_text', None))
+        ranker_id = request.POST.get('ranker', None)
+        try:
+            ranker = getattr(metapy.index, ranker_id)()
+            print('ranker')
+        except:
+            print("Couldn't make '{}' ranker, using default.".format(ranker_id))
+            ranker = self.default_ranker
+        response = {'query': request.POST.get('query_text', None), 'results': []}
+        print('response')
+        results = ranker.score(self.idx, query,1000)
+        # print(self.idx.num_docs())
+        # print(self.idx.unique_terms())
+        print(len(results))
+        for result in ranker.score(self.idx, query,1000):
+            # print(result[1])
+            # print(self.idx.doc_name(result[0]))
+            response['results'].append({
+                'score': float(result[1]),
+                'name': self.idx.doc_name(result[0]),
+                'path': self.idx.doc_path(result[0])
+            })
+        response['elapsed_time'] = time.time() - start
+        return json.dumps(response, indent=2)

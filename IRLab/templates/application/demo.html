@@ -1,5 +1,57 @@
 {% extends "blog/base.html" %}
+{% load staticfiles %}
+
 
 {% block content %}
-{{ name }}
+
+    <div class="container-fluid">
+        <div class="text-center">
+            <h1>Search</h1>
+        </div>
+
+        <br>
+        <br>
+
+        <div class="row">
+            <div class="mx-auto" style="width: 800px;">
+                <div class="input-group">
+                    <div class="input-group-btn search-panel">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span id="search_concept">{{ ranker }}</span>
+                            <span class="caret"></span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <h6 class="dropdown-header">Ranking function</h6>
+                            <a id="OkapiBM25" class="dropdown-item">Okapi BM25</a>
+                            <a id="PivotedLength" class="dropdown-item">Pivoted Length Normalization</a>
+                            <a id="DirichletPrior" class="dropdown-item">Dirichlet Prior Smoothing</a>
+                            <a id="JelinekMercer" class="dropdown-item">Jelinek-Mercer Smoothing</a>
+                            <a id="AbsoluteDiscount" class="dropdown-item">Absolute Discount Smoothing</a>
+                        </div>
+                    </div>
+                    <form class="form-inline" action="{% url 'create_search_engine' 'OkapiBM25' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="ranker" value="OkapiBM25" id="search_param">
+                        <input type="text" class="form-control" placeholder="Enter a query..." name="query_text" style="width: 600px;">
+                        <button type="submit" class="btn btn-default"><span data-feather="search"></span></button>
+                    {#                        <span class="input-group-btn">#}
+                    {#                          <button class="btn btn-default" type="button" id="search_button" type="submit">#}
+                    {#                            <span data-feather="search"></span>#}
+                    {#                          </button>#}
+                    {#                        </span>#}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+        feather.replace()
+    </script>
+    <script src="{% static 'js/index.js' %}"
+    ></script>
 {% endblock %}
+
+

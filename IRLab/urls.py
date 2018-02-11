@@ -11,6 +11,6 @@ urlpatterns = [
     url(r'^retrievals/$',views.show_retrievals, name = 'show_retrievals'),
     url(r'^retrievals/configs/(?P<name>[^/]+)/$',views.show_configs, name = 'show_configs'),
     url(r'^retrievals/saveConfigs/(?P<name>[^/]+)/$',views.save_configs, name = 'save_configs'),
-    url(r'^applications/create/(?P<name>[^/]+)/$',views.create_search_engine, name = 'create_search_engine'),
+    url(r'^applications/create/(?P<ranker>[^/]+)/$',views.create_search_engine, name = 'create_search_engine'),
 
 ]
