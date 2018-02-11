@@ -6,6 +6,7 @@ db.sqlite3
 /static
 .DS_Store
 /apnews
-/idx
+/index
+/ap-index
 .idea/
-IRLab/search-config.toml
+/IRLab/search-config.toml

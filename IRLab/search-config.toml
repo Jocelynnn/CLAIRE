@@ -9,7 +9,7 @@ query-path = "../queries.txt" # create this file
 
 dataset = "cranfield"
 corpus = "line.toml" # located inside dataset folder
-index = "idx"
+index = "index"
 indexer-ram-budget = 1024 # **estimated** RAM budget for indexing in MB
                           # always set this lower than your physical RAM!
 
