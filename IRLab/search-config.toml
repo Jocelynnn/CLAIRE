@@ -1,4 +1,4 @@
-prefix = "/home/bingjie3/IRLab"
+prefix = ""
 
 dataset = "cranfield"
 corpus = "line.toml" # located inside dataset folder
