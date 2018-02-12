@@ -12,4 +12,5 @@ if __name__ == "__main__":
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    # from django.core.management import execute_from_command_line
     execute_from_command_line(sys.argv)

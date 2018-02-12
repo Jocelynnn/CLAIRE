@@ -9,7 +9,7 @@ class bm25Form(forms.ModelForm):
 
     class Meta:
         model = Okapi_bm25
-        fields = ('p_k1', 'p_b','p_k3')
+        fields = ('p_k1', 'p_b','p_k3',)
         labels = {
             'p_k1': _('Doc term smoothing'),
             'p_b': _('Length normalization'),

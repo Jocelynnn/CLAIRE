@@ -20,10 +20,10 @@
                     {{ ranker.name }}
                   </td>
                   <td>
-                    test
+                    {{ ranker.id }}
                   </td>
                   <td>
-                    <a href="{% url  'create_search_engine' ranker.name%}">create ranker</a>
+                    <a href="{% url  'create_search_engine' ranker.id%}">create ranker</a>
                   </td>
                   </tr>
                 {% endfor %}
