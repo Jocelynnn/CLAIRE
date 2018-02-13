@@ -1,7 +1,8 @@
 import json
 import time
-
 import metapy
+import os
+
 
 class Searcher:
     """
@@ -39,3 +40,14 @@ class Searcher:
         response['elapsed_time'] = time.time() - start
         return json.dumps(response, indent=2)
 
+
+if __name__ == '__main__':
+    cfg = './search-config.toml'
+    test_idx = metapy.index.make_inverted_index(cfg)
+    print('test!!!', test_idx.num_docs())
+    ranker = metapy.index.OkapiBM25(k1=1.2, b=0.75, k3=500)
+    query = metapy.index.Document()
+    query.content(
+        'what similarity laws must be obeyed when constructing aeroelastic models of heated high speed aircraft .')
+    top_docs = ranker.score(test_idx, query, num_results=5)
+    print('score finished!!', top_docs)

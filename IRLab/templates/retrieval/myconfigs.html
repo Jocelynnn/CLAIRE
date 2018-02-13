@@ -1,38 +1,114 @@
 {% extends "retrieval/main.html" %}
+{% load config_extras %}
 
 
 {% block config %}
-    <main role="main" class="col-md-8 ml-sm-auto col-lg-9 pt-3 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
 
-          <table class="table table-striped table-bordered table-hover">
-              <thead class="thead-dark">
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+
+            <table class="table  table-bordered table-hover">
+                {#                <thead class="thead-dark">#}
+                <thead>
                 <tr>
-                  <th>Ranker</th>
-                  <th>Dataset</th>
-                  <th>NDCG</th>
+                    <th rowspan="2">Ranker</th>
+                    <th rowspan="2">Parameters</th>
+                    <th colspan="2">Cranfield</th>
+                    <th colspan="2">Apnews</th>
+                    <th colspan="2">Trec</th>
+                    <th rowspan="2">Application</th>
                 </tr>
-              </thead>
-              <tbody>
-              {% for ranker in rankers %}
-                  <tr>
-                  <td>
-                    {{ ranker.name }}
-                  </td>
-                  <td>
-                    {{ ranker.id }}
-                  </td>
-                  <td>
-                    <a href="{% url  'create_search_engine' ranker.id%}">create ranker</a>
-                  </td>
-                  </tr>
+                <tr>
+                    <th scope="col">map</th>
+                    <th scope="col">NDCG</th>
+                    <th scope="col">map</th>
+                    <th scope="col">NDCG</th>
+                    <th scope="col">map</th>
+                    <th scope="col">NDCG@</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ranker,perf_list in  ranker_perfs %}
+                    <tr>
+                        <td>
+                            {{ ranker.name }}
+                        </td>
+                        <td>
+                            {#                            {{ ranker.p_k1 }}#}
+                            {#                            {{ ranker.p_b }}#}
+                            {#                            {{ ranker.p_k3 }}#}
+                            {#                            {{ ranker.p_lambda }}#}
+                            {#                            {{ ranker.p_mu }}#}
+                            {#                            {{ ranker.p_s }}#}
+                            {#                            {{ ranker.p_delta }}#}
+                            <form>
+                                <div class="form-group">
+                                    {% for field in ranker_forms|lookup:ranker.id %}
+                                        <div class="row">
+                                            <div class="col-sm-6">{{ field.label_tag }}</div>
+                                            <div class="col">{{ field }}</div>
+                                            {#                                        {{ field.label_tag }}#}
+                                            {#                                        {{ field }}#}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </form>
+
+                        </td>
+
+                        {% if perf_list %}
+                            <td>{{ perf_list.0.map }}</td>
+                            <td>{{ perf_list.0.ndcg }}</td>
+
+                            <td>{{ perf_list.1.map }}</td>
+                            <td>{{ perf_list.1.ndcg }}</td>
+                            <td>{{ perf_list.2.map }}</td>
+                            <td>{{ perf_list.2.ndcg }}</td>
+                            {% else %}
+                            <td colspan="2">
+                            <button class="btn btn-info">evaluate</button>
+                            </td>
+                            <td colspan="2">
+                            <button class="btn btn-info">evaluate</button>
+                            </td>
+                            <td colspan="2">
+                            <button class="btn btn-info">evaluate</button>
+                            </td>
+                        {% endif %}
+
+
+                        <td>
+                            <button class="btn btn-info" type="submit">
+                                <a href="{% url  'create_search_engine' ranker.id %}" style="color: white">Create Search Engine</a>
+                            </button>
+
+                        </td>
+                    </tr>
                 {% endfor %}
 
-              </tbody>
+                </tbody>
             </table>
 
-          </div>
+
+        </div>
     </main>
+
+    {#    <div class="col-md-6"></div>#}
+    {#    <div class="col-md-4">#}
+    {#        {% if ranker_perfs %}#}
+    {#            <h1>ahahhahaaaaaaaaaaaaaaaa</h1>#}
+    {#            {{ ranker_perfs }}#}
+    {#            {% for ranker,perf_list in  ranker_perfs %}#}
+    {#                <h1>{{ ranker }}</h1>#}
+    {#                {{ perf_list }}#}
+    {#                {% for perf in perf_list %}#}
+    {#                    <h1>{{ perf.map }}</h1>#}
+    {#                {% endfor %}#}
+    {#            {% endfor %}#}
+    {#        {% endif %}#}
+    {#    </div>#}
+    {#    <div class="col-md-4"></div>#}
+
 
 
 {% endblock %}

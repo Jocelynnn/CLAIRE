@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.utils import timezone
 from .models import Post
-from .models import RetrievalMethod
+from .models import RetrievalMethod, Peformance
 from .config_forms import bm25Form, jmForm, dpForm, plForm, adForm
 import metapy
 import json
@@ -9,6 +9,7 @@ import time
 import os
 from django.conf import settings
 import pytoml
+from collections import defaultdict
 
 
 # Create your views here.
@@ -18,9 +19,25 @@ def post_list(request):
 
 
 # show all retrieval functions created by current use
-def show_retrievals(request):
+def show_rankers(request):
     rankers = RetrievalMethod.objects.filter(author=request.user)
-    return render(request, 'retrieval/myconfigs.html', {'rankers': rankers})
+    ranker_perfs = defaultdict()
+    ranker_forms = defaultdict()
+    for ranker in rankers:
+        perfs = Peformance.objects.filter(ranker=ranker)
+        # ranker_perfs[ranker].append(get_empty_form(ranker.name))
+        ranker_perfs[ranker]= perfs
+        curt_form = get_filled_form(ranker)
+        for key in curt_form.fields.keys():
+            curt_form.fields[key].widget.attrs['readonly'] = True
+            curt_form.fields[key].widget.attrs['class'] = 'form-control'
+        ranker_forms[ranker.id] = curt_form
+
+
+    print(ranker_perfs)
+    print(rankers)
+    print(ranker_forms)
+    return render(request, 'retrieval/myconfigs.html', {'rankers': rankers,'ranker_perfs':ranker_perfs.items(),'ranker_forms':ranker_forms})
 
 
 # show configuring form for one of the retrieval function
@@ -35,6 +52,7 @@ def show_configs(request, name):
         curt_form = jmForm()
     elif name == 'Absolute Discount Smoothing':
         curt_form = adForm()
+    curt_form = get_empty_form(name)
     return render(request, 'retrieval/configs.html', {'name': name, 'form': curt_form})
 
 
@@ -92,10 +110,47 @@ def search(request):
         print(request.POST.get('query_text', None))
         print(ranker.ranker_id)
 
+        cfg = 'IRLab/search-config.toml'
+        cfg = os.path.join(settings.BASE_DIR, cfg)
+        test_idx = metapy.index.make_inverted_index(cfg)
+        print('test111', test_idx.num_docs())
+        ranker = metapy.index.OkapiBM25(k1=1.2, b=0.75, k3=500)
+        query = metapy.index.Document()
+        query.content(
+            'what similarity laws must be obeyed when constructing aeroelastic models of heated high speed aircraft .')
+        top_docs = ranker.score(test_idx, query, num_results=5)
+        print('score finished!!', top_docs)
+
         response = json.loads(searcher.search(request, ranker))
         return render(request, 'application/demo.html',
                       {'ranker_name': ranker.name, 'response': response})
 
+
+def get_empty_form(ranker_name):
+    if ranker_name == 'Okapi BM25':
+        curt_form = bm25Form()
+    elif ranker_name == 'Pivoted Length Normalization':
+        curt_form = plForm()
+    elif ranker_name == 'Dirichlet Prior Smoothing':
+        curt_form = dpForm()
+    elif ranker_name == 'Jelinek-Mercer Smoothing':
+        curt_form = jmForm()
+    elif ranker_name == 'Absolute Discount Smoothing':
+        curt_form = adForm()
+    return curt_form
+
+def get_filled_form(ranker):
+    if ranker.name == 'Okapi BM25':
+        curt_form = bm25Form(instance=ranker)
+    elif ranker.name == 'Pivoted Length Normalization':
+        curt_form = plForm(instance=ranker)
+    elif ranker.name == 'Dirichlet Prior Smoothing':
+        curt_form = dpForm(instance=ranker)
+    elif ranker.name == 'Jelinek-Mercer Smoothing':
+        curt_form = jmForm(instance=ranker)
+    elif ranker.name == 'Absolute Discount Smoothing':
+        curt_form = adForm(instance=ranker)
+    return curt_form
 
 class Searcher:
     """
@@ -133,15 +188,7 @@ class Searcher:
         Accept a JSON request and run the provided query with the specified
         ranker.
         """
-        cfg = 'IRLab/search-config.toml'
-        cfg = os.path.join(settings.BASE_DIR, cfg)
-        test_idx = metapy.index.make_inverted_index(cfg)
-        print('test!!!',test_idx.num_docs())
-        ranker = metapy.index.OkapiBM25(k1=1.2,b=0.75,k3=500)
-        query = metapy.index.Document()
-        query.content('tttt')  # query from AP news
-        top_docs = ranker.score(test_idx, query, num_results=5)
-        print('score finished!!',top_docs)
+
 
 
         # start = time.time()
