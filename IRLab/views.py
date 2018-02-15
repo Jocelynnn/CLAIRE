@@ -10,12 +10,25 @@ import os
 from django.conf import settings
 import pytoml
 from collections import defaultdict
+from django_tables2 import RequestConfig
+from .table import RankerTable,PerfTable
 
 
 # Create your views here.
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
+
+def show_perfs(request):
+    rankers = RetrievalMethod.objects.filter(author=request.user)
+    table = PerfTable(Peformance.objects.filter(ranker__in=rankers))
+    RequestConfig(request).configure(table)
+    return render(request, 'evaluation/myperfs.html', {'table': table})
+
+def show_rankers2(request):
+    table = RankerTable(RetrievalMethod.objects.filter(author=request.user))
+    RequestConfig(request).configure(table)
+    return render(request, 'retrieval/myrankers.html', {'table': table})
 
 
 # show all retrieval functions created by current use

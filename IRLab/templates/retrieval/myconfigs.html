@@ -64,22 +64,23 @@
                             <td>{{ perf_list.1.ndcg }}</td>
                             <td>{{ perf_list.2.map }}</td>
                             <td>{{ perf_list.2.ndcg }}</td>
-                            {% else %}
+                        {% else %}
                             <td colspan="2">
-                            <button class="btn btn-info">evaluate</button>
+                                <button class="btn btn-info">evaluate</button>
                             </td>
                             <td colspan="2">
-                            <button class="btn btn-info">evaluate</button>
+                                <button class="btn btn-info">evaluate</button>
                             </td>
                             <td colspan="2">
-                            <button class="btn btn-info">evaluate</button>
+                                <button class="btn btn-info">evaluate</button>
                             </td>
                         {% endif %}
 
 
                         <td>
                             <button class="btn btn-info" type="submit">
-                                <a href="{% url  'create_search_engine' ranker.id %}" style="color: white">Create Search Engine</a>
+                                <a href="{% url  'create_search_engine' ranker.id %}" style="color: white">Create Search
+                                    Engine</a>
                             </button>
 
                         </td>
