@@ -114,6 +114,7 @@ def create_search_engine(request, id):
 def search(request):
     searcher = Searcher(request.session['cfg'])
 
+    metapy.log_to_stderr()
     if request.method == 'POST':
         ranker = RetrievalMethod.objects.filter(id=request.POST.get('id', None))
         assert len(ranker) == 1
@@ -164,6 +165,8 @@ def get_filled_form(ranker):
     elif ranker.name == 'Absolute Discount Smoothing':
         curt_form = adForm(instance=ranker)
     return curt_form
+
+
 
 class Searcher:
     """

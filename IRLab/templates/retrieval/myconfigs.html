@@ -4,7 +4,7 @@
 
 {% block config %}
 
-    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
 
             <table class="table  table-bordered table-hover">
@@ -13,18 +13,25 @@
                 <tr>
                     <th rowspan="2">Ranker</th>
                     <th rowspan="2">Parameters</th>
-                    <th colspan="2">Cranfield</th>
-                    <th colspan="2">Apnews</th>
-                    <th colspan="2">Trec</th>
+                    {#                    <th colspan="2">Cranfield</th>#}
+                    {#                    <th colspan="2">Apnews</th>#}
+                    {#                    <th colspan="2">Trec</th>#}
+
+                    {#      TODO                      if no ndcg#}
+
+                    <th>Cranfield</th>
+                    <th>Apnews</th>
+                    <th>Trec</th>
+
                     <th rowspan="2">Application</th>
                 </tr>
                 <tr>
                     <th scope="col">map</th>
-                    <th scope="col">NDCG</th>
+                    {#                    <th scope="col">NDCG</th>#}
                     <th scope="col">map</th>
-                    <th scope="col">NDCG</th>
+                    {#                    <th scope="col">NDCG</th>#}
                     <th scope="col">map</th>
-                    <th scope="col">NDCG@</th>
+                    {#                    <th scope="col">NDCG@</th>#}
                 </tr>
                 </thead>
                 <tbody>
@@ -58,22 +65,34 @@
 
                         {% if perf_list %}
                             <td>{{ perf_list.0.map }}</td>
-                            <td>{{ perf_list.0.ndcg }}</td>
+                            {#                            <td>{{ perf_list.0.ndcg }}</td>#}
 
                             <td>{{ perf_list.1.map }}</td>
-                            <td>{{ perf_list.1.ndcg }}</td>
+                            {#                            <td>{{ perf_list.1.ndcg }}</td>#}
                             <td>{{ perf_list.2.map }}</td>
-                            <td>{{ perf_list.2.ndcg }}</td>
+                            {#                            <td>{{ perf_list.2.ndcg }}</td>#}
                         {% else %}
-                            <td colspan="2">
+{#                            <td colspan="2">#}
+{#                                <button class="btn btn-info">evaluate</button>#}
+{#                            </td>#}
+{#                            <td colspan="2">#}
+{#                                <button class="btn btn-info">evaluate</button>#}
+{#                            </td>#}
+{#                            <td colspan="2">#}
+{#                                <button class="btn btn-info">evaluate</button>#}
+{#                            </td>#}
+
+                            {#         TODO                   if no ndcg#}
+                            <td colspan="1">
                                 <button class="btn btn-info">evaluate</button>
                             </td>
-                            <td colspan="2">
+                            <td colspan="1">
                                 <button class="btn btn-info">evaluate</button>
                             </td>
-                            <td colspan="2">
+                            <td colspan="1">
                                 <button class="btn btn-info">evaluate</button>
                             </td>
+
                         {% endif %}
 
 
