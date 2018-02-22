@@ -2,6 +2,9 @@ from django.db import models
 from django.utils import timezone
 from polymorphic.models import PolymorphicModel
 import json
+from froala_editor.fields import FroalaField
+
+
 
 
 class RetrievalMethod(PolymorphicModel):
@@ -47,6 +50,10 @@ class Absolute_discount(RetrievalMethod):
     ranker_id = models.CharField(max_length=70, default='AbsoluteDiscount')
 
 
+
+class Own_retrieval(RetrievalMethod):
+    source = models.CharField(max_length=70)
+
 class Peformance(models.Model):
     ranker = models.ForeignKey(RetrievalMethod, on_delete=models.CASCADE)
     dataset = models.CharField(max_length=30)
@@ -73,3 +80,11 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+
+
+class Code(models.Model):
+    text = FroalaField(options={
+        'toolbarInline': False,
+    })

@@ -9,32 +9,18 @@
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link active" href="{% url 'show_retrievals' %}">
-                                <span data-feather="home"></span>
-                                My rankers <span class="sr-only">(current)</span>
                             </a>
                         </li>
-                        {#              <li class="nav-item">#}
-                        {#                <a class="nav-link" href="#">#}
-                        {#                  <span data-feather="file"></span>#}
-                        {#                  Orders#}
-                        {#                </a>#}
-                        {#              </li>#}
-                        {#              <li class="nav-item">#}
-                        {#                <a class="nav-link" href="#">#}
-                        {#                  <span data-feather="bar-chart-2"></span>#}
-                        {#                  Reports#}
-                        {#                </a>#}
-                        {#              </li>#}
-                        {#              <li class="nav-item">#}
-                        {#                <a class="nav-link" href="#">#}
-                        {#                  <span data-feather="layers"></span>#}
-                        {#                  Integrations#}
-                        {#                </a>#}
-                        {#              </li>#}
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'show_retrievals' %}">
+                                <span data-feather="layers"></span>
+                                My Retrieval Functions
+                            </a>
+                        </li>
                     </ul>
 
                     <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                        <span>Create Ranker</span>
+                        <span>Create Retrieval functions</span>
                         <a class="d-flex align-items-center text-muted" href="#">
                             {#                <span data-feather="plus-circle"></span>#}
                         </a>
@@ -43,7 +29,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'show_configs' 'Okapi BM25' %}">
                                 {#                                <span data-feather="file-text"></span>#}
-                                <span data-feather="plus-circle"></span>
+                                <span data-feather="settings"></span>
                                 <span>Okapi BM25</span>
 
                             </a>
@@ -51,7 +37,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'show_configs' 'Pivoted Length Normalization' %}">
                                 {#                                <span data-feather="file-text"></span>#}
-                                <span data-feather="plus-circle"></span>
+                                <span data-feather="settings"></span>
                                 <span>Pivoted Length Normalization</span>
 
                             </a>
@@ -59,7 +45,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'show_configs' 'Dirichlet Prior Smoothing' %}">
                                 {#                                <span data-feather="file-text"></span>#}
-                                <span data-feather="plus-circle"></span>
+                                <span data-feather="settings"></span>
                                 <span>
                         Dirichlet Prior Smoothing
                     </span>
@@ -68,7 +54,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'show_configs' 'Jelinek-Mercer Smoothing' %}">
                                 {#                                <span data-feather="file-text"></span>#}
-                                <span data-feather="plus-circle"></span>
+                                <span data-feather="settings"></span>
 
                                 <span>Jelinek-Mercer Smoothing</span>
                             </a>
@@ -76,9 +62,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'show_configs' 'Absolute Discount Smoothing' %}">
                                 {#                                <span data-feather="file-text"></span>#}
-                                <span data-feather="plus-circle"></span>
+                                <span data-feather="settings"></span>
 
                                 <span>Absolute Discount Smoothing</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'show_new_retrieval_configs'%}">
+                                {#                                <span data-feather="file-text"></span>#}
+                                <span data-feather="edit"></span>
+
+                                <span>Customized Retrieval Function</span>
                             </a>
                         </li>
                     </ul>

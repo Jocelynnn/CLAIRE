@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.utils import timezone
 from .models import Post
-from .models import RetrievalMethod, Peformance
-from .config_forms import bm25Form, jmForm, dpForm, plForm, adForm
+from .models import RetrievalMethod, Peformance, Code
+from .forms import bm25Form, jmForm, dpForm, plForm, adForm,OwnRetrievalForm
 import metapy
 import json
 import time
@@ -12,6 +12,9 @@ import pytoml
 from collections import defaultdict
 from django_tables2 import RequestConfig
 from .table import RankerTable,PerfTable
+from django.contrib.auth.decorators import login_required
+
+
 
 
 # Create your views here.
@@ -19,19 +22,26 @@ def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
 
+def show_home(request):
+    return render(request,'blog/home.html')
+
+@login_required
 def show_perfs(request):
     rankers = RetrievalMethod.objects.filter(author=request.user)
     table = PerfTable(Peformance.objects.filter(ranker__in=rankers))
     RequestConfig(request).configure(table)
     return render(request, 'evaluation/myperfs.html', {'table': table})
 
-def show_rankers2(request):
-    table = RankerTable(RetrievalMethod.objects.filter(author=request.user))
-    RequestConfig(request).configure(table)
-    return render(request, 'retrieval/myrankers.html', {'table': table})
+# @login_required
+# # TODO REMOVE LATER
+# def show_rankers2(request):
+#     table = RankerTable(RetrievalMethod.objects.filter(author=request.user))
+#     RequestConfig(request).configure(table)
+#     return render(request, 'retrieval/myrankers.html', {'table': table})
 
 
 # show all retrieval functions created by current use
+@login_required
 def show_rankers(request):
     rankers = RetrievalMethod.objects.filter(author=request.user)
     ranker_perfs = defaultdict()
@@ -50,10 +60,16 @@ def show_rankers(request):
     print(ranker_perfs)
     print(rankers)
     print(ranker_forms)
-    return render(request, 'retrieval/myconfigs.html', {'rankers': rankers,'ranker_perfs':ranker_perfs.items(),'ranker_forms':ranker_forms})
+    return render(request, 'retrieval/myRetrievals.html', {'rankers': rankers, 'ranker_perfs':ranker_perfs.items(), 'ranker_forms':ranker_forms})
+
+
+def show_new_retrieval_configs(request):
+    form = OwnRetrievalForm()
+    return render(request,'retrieval/createNewRetrievals.html',{'form':form})
 
 
 # show configuring form for one of the retrieval function
+@login_required
 def show_configs(request, name):
     if name == 'Okapi BM25':
         curt_form = bm25Form()
@@ -66,7 +82,7 @@ def show_configs(request, name):
     elif name == 'Absolute Discount Smoothing':
         curt_form = adForm()
     curt_form = get_empty_form(name)
-    return render(request, 'retrieval/configs.html', {'name': name, 'form': curt_form})
+    return render(request, 'retrieval/createOldRetrievals.html', {'name': name, 'form': curt_form})
 
 
 def save_configs(request, name):
@@ -88,10 +104,10 @@ def save_configs(request, name):
             curt_method.author = request.user
             curt_method.name = name
             curt_method.save()
-            return render(request, 'retrieval/configs.html', {'name': name, 'form': curt_form})
+            return render(request, 'retrieval/createOldRetrievals.html', {'name': name, 'form': curt_form})
     else:
         curt_form = bm25Form()
-    return render(request, 'retrieval/configs.html', {'name': name, 'form': curt_form})
+    return render(request, 'retrieval/createOldRetrievals.html', {'name': name, 'form': curt_form})
 
 
 def create_search_engine(request, id):
@@ -152,6 +168,7 @@ def get_empty_form(ranker_name):
     elif ranker_name == 'Absolute Discount Smoothing':
         curt_form = adForm()
     return curt_form
+
 
 def get_filled_form(ranker):
     if ranker.name == 'Okapi BM25':

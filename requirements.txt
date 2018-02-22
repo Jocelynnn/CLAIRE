@@ -13,3 +13,5 @@ django-polymorphic
 django
 django-widget-tweaks
 django-tables2
+django-froala-editor
+django-codemirror2

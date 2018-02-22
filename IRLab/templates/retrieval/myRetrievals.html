@@ -4,7 +4,7 @@
 
 {% block config %}
 
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
 
             <table class="table  table-bordered table-hover">
@@ -84,21 +84,21 @@
 
                             {#         TODO                   if no ndcg#}
                             <td colspan="1">
-                                <button class="btn btn-info">evaluate</button>
+                                <button class="btn btn-primary">evaluate</button>
                             </td>
                             <td colspan="1">
-                                <button class="btn btn-info">evaluate</button>
+                                <button class="btn btn-primary">evaluate</button>
                             </td>
                             <td colspan="1">
-                                <button class="btn btn-info">evaluate</button>
+                                <button class="btn btn-primary">evaluate</button>
                             </td>
 
                         {% endif %}
 
 
                         <td>
-                            <button class="btn btn-info" type="submit">
-                                <a href="{% url  'create_search_engine' ranker.id %}" style="color: white">Create Search
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <a class="nav-link" href="{% url  'create_search_engine' ranker.id %}" style="color: white">Create Search
                                     Engine</a>
                             </button>
 

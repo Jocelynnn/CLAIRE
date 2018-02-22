@@ -1,0 +1,67 @@
+{% extends "retrieval/main.html" %}
+
+
+{% block config %}
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2">Implement Customized Retrieval Functions</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    {#                    <button class="btn btn-sm btn-outline-secondary" href="">Save</button>#}
+                    {#                    <button class="btn btn-sm btn-outline-secondary">Export</button>#}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-10">
+                <form>
+                    <div class="form-group">
+                        <label for="exampleFormControlFile1">Upload your retrieval function file</label>
+                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                    </div>
+
+                    {#                    <div class="form-group">#}
+                    {#                        <label for="exampleFormControlInput1">Email address</label>#}
+                    {#                        <input type="email" class="form-control" id="exampleFormControlInput1"#}
+                    {#                               placeholder="name@example.com">#}
+                    {#                    </div>#}
+                    {#                    <div class="form-group">#}
+                    {#                        <label for="exampleFormControlSelect1">Example select</label>#}
+                    {#                        <select class="form-control" id="exampleFormControlSelect1">#}
+                    {#                            <option>1</option>#}
+                    {#                            <option>2</option>#}
+                    {#                            <option>3</option>#}
+                    {#                            <option>4</option>#}
+                    {#                            <option>5</option>#}
+                    {#                        </select>#}
+                    {#                    </div>#}
+                    {#                    <div class="form-group">#}
+                    {#                        <label for="exampleFormControlTextarea1">Example textarea</label>#}
+                    {#                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="20"></textarea>#}
+                    {#                    </div>#}
+
+
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <form method="post" action="#" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <div></div>
+                    <div class="offset-4 col-md-4 text-center">
+                        <button class="btn btn-primary text-center" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+    </main>
+
+
+{% endblock %}

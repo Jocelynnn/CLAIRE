@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django_tables2',
     'widget_tweaks',
     'IRLab',
-
+    'froala_editor',
+    'codemirror2',
 ]
 
 MIDDLEWARE = [
@@ -124,5 +125,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/retrievals/'
 LOGOUT_REDIRECT_URL = '/'
-
+FROALA_INCLUDE_JQUERY = False
+FROALA_EDITOR_PLUGINS = ('char_counter', )
 
