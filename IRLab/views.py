@@ -112,7 +112,7 @@ def save_configs(request, name):
 
 def create_search_engine(request, id):
     cfg = 'IRLab/search-config.toml'
-    cfg = os.path.join(settings.BASE_DIR, cfg)
+    cfg = os.path.abspath(os.path.join(settings.BASE_DIR, cfg))
     ranker = RetrievalMethod.objects.filter(id=id)
     assert len(ranker) == 1
     ranker = ranker[0]
