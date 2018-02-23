@@ -1,6 +1,6 @@
 import metapy
 
-class SimpleRanker(metapy.index.RankingFunction):
+class MyRanker(metapy.index.RankingFunction):
     """
     Create a new ranking function in Python that can be used in MeTA.
     """
@@ -8,7 +8,7 @@ class SimpleRanker(metapy.index.RankingFunction):
     def __init__(self, some_param=1.0):
         self.param = some_param
         # You *must* call the base class constructor here!
-        super(SimpleRanker, self).__init__()
+        super(MyRanker, self).__init__()
 
     def score_one(self, sd):
         """
