@@ -14,9 +14,10 @@ from django_tables2 import RequestConfig
 from .table import RankerTable, PerfTable
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
-import math
 import random
 from pathlib import Path
+import subprocess
+
 
 
 
@@ -144,13 +145,11 @@ def save_configs(request, name):
 def create_search_engine(request, id):
     cfg = 'IRLab/search-config.toml'
     cfg = os.path.abspath(os.path.join(settings.BASE_DIR, cfg))
-    ranker = RetrievalMethod.objects.filter(id=id)
-    assert len(ranker) == 1
-    ranker = ranker[0]
+    ranker = RetrievalMethod.objects.get(id=id)
 
     print('ranker name', ranker.name)
     print('ranker id', ranker.ranker_id)
-    searcher = Searcher(cfg)
+    # searcher = Searcher(cfg)
     # searcher.eval(request, ranker)
     request.session['cfg'] = cfg
 
@@ -159,32 +158,27 @@ def create_search_engine(request, id):
 
 
 def search(request):
-    searcher = Searcher(request.session['cfg'])
-
-    metapy.log_to_stderr()
     if request.method == 'POST':
-        ranker = RetrievalMethod.objects.filter(id=request.POST.get('id', None))
-        assert len(ranker) == 1
-        ranker = ranker[0]
+        ranker = RetrievalMethod.objects.get(id=request.POST.get('id', None))
         # searcher.search(request)
         print('inside create enginee!!!!')
-        print(request.POST.get('query_text', None))
-        print(ranker.ranker_id)
+        query = request.POST.get('query_text', None)
+        print(query)
+        ranker_id = ranker.ranker_id
+        print(ranker_id)
 
-        cfg = 'IRLab/search-config.toml'
-        cfg = os.path.join(settings.BASE_DIR, cfg)
-        test_idx = metapy.index.make_inverted_index(cfg)
-        print('test111', test_idx.num_docs())
-        ranker = metapy.index.OkapiBM25(k1=1.2, b=0.75, k3=500)
-        query = metapy.index.Document()
-        query.content(
-            'what similarity laws must be obeyed when constructing aeroelastic models of heated high speed aircraft .')
-        top_docs = ranker.score(test_idx, query, num_results=5)
-        print('score finished!!', top_docs)
+        run_script = 'search.py '
+        # "python3 searcher.py config.toml "
+        commands = "python3 " + run_script + 'search-config.toml ' + "'" + query + "' " + ranker_id
+        print(commands)
+        proc = subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                shell=True)
+        output = proc.communicate()[0].decode('utf-8')
+        print(output)
 
-        response = json.loads(searcher.search(request, ranker))
+        response = json.loads(output)
         return render(request, 'application/demo.html',
-                      {'ranker_name': ranker.name, 'response': response})
+                      {'ranker_name': ranker.name, 'response': response, 'id': ranker.id, 'ranker_id': ranker.ranker_id})
 
 
 def get_empty_form(ranker_name):
@@ -255,9 +249,6 @@ class Searcher:
         Accept a JSON request and run the provided query with the specified
         ranker.
         """
-
-
-
         # start = time.time()
         # query = metapy.index.Document()
         # query.content(str(request.POST.get('query_text', None)))
