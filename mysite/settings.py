@@ -128,3 +128,6 @@ LOGOUT_REDIRECT_URL = '/'
 FROALA_INCLUDE_JQUERY = False
 FROALA_EDITOR_PLUGINS = ('char_counter', )
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+

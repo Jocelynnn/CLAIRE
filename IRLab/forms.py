@@ -62,9 +62,9 @@ class CodeForm(forms.ModelForm):
 
 
 class OwnRetrievalForm(forms.Form):
-    sample = ''
     sample_file = 'IRLab/uploads/sample.py'
-    cfg = os.path.join(settings.BASE_DIR, sample_file)
+    cfg = os.path.join(os.path.abspath(settings.BASE_DIR), sample_file)
+    sample = ''
     with open(sample_file) as f:
         sample = f.readlines()
 
