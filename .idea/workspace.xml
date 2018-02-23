@@ -2,30 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="917f0d0a-3446-4673-8107-58ce09de8feb" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/search-config.toml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/IRLab/search-config.toml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/bcancer-doc-count.txt" afterPath="$PROJECT_DIR$/data/bcancer-doc-count.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/bcancer-metadata.txt" afterPath="$PROJECT_DIR$/data/bcancer-metadata.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/ceeaus-doc-count.txt" afterPath="$PROJECT_DIR$/data/ceeaus-doc-count.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/ceeaus-metadata.txt" afterPath="$PROJECT_DIR$/data/ceeaus-metadata.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/ceeaus-qrels.txt" afterPath="$PROJECT_DIR$/data/ceeaus-qrels.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/ceeaus-term-count.txt" afterPath="$PROJECT_DIR$/data/ceeaus-term-count.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/cranfield-qrels.txt" afterPath="$PROJECT_DIR$/data/cranfield-qrels.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/cranfield-queries.txt" afterPath="$PROJECT_DIR$/data/cranfield-queries.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/english-sentences.arpa" afterPath="$PROJECT_DIR$/data/english-sentences.arpa" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/function-words-short.txt" afterPath="$PROJECT_DIR$/data/function-words-short.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/function-words.txt" afterPath="$PROJECT_DIR$/data/function-words.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/lemur-stopwords.txt" afterPath="$PROJECT_DIR$/data/lemur-stopwords.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/porter2_stems.txt" afterPath="$PROJECT_DIR$/data/porter2_stems.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/sample-document.txt" afterPath="$PROJECT_DIR$/data/sample-document.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/sentence-boundaries/sentence-end-exceptions.txt" afterPath="$PROJECT_DIR$/data/sentence-boundaries/sentence-end-exceptions.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/sentence-boundaries/sentence-punctuation.txt" afterPath="$PROJECT_DIR$/data/sentence-boundaries/sentence-punctuation.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/data/sentence-boundaries/sentence-start-exceptions.txt" afterPath="$PROJECT_DIR$/data/sentence-boundaries/sentence-start-exceptions.txt" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/IRLab/searcher.py" afterPath="$PROJECT_DIR$/searcher.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/IRLab/templates/application/demo.html" afterPath="$PROJECT_DIR$/IRLab/templates/application/demo.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/IRLab/views.py" afterPath="$PROJECT_DIR$/IRLab/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cranfield/line.toml" afterPath="$PROJECT_DIR$/cranfield/line.toml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -42,11 +19,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/IRLab/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
-              <caret line="175" column="27" lean-forward="false" selection-start-line="175" selection-start-column="27" selection-end-line="175" selection-end-column="27" />
+            <state relative-caret-position="461">
+              <caret line="177" column="23" lean-forward="true" selection-start-line="177" selection-start-column="23" selection-end-line="177" selection-end-column="23" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -54,7 +31,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="demo.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="demo.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/IRLab/templates/application/demo.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="109">
@@ -68,7 +45,7 @@
         <entry file="file://$PROJECT_DIR$/search.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="585">
-              <caret line="39" column="25" lean-forward="true" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+              <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -155,10 +132,10 @@
         <option value="$PROJECT_DIR$/IRLab/search-config.toml" />
         <option value="$PROJECT_DIR$/searcher.py" />
         <option value="$PROJECT_DIR$/cranfield/line.toml" />
-        <option value="$PROJECT_DIR$/IRLab/views.py" />
         <option value="$PROJECT_DIR$/search-config.toml" />
         <option value="$PROJECT_DIR$/search.py" />
         <option value="$PROJECT_DIR$/IRLab/templates/application/demo.html" />
+        <option value="$PROJECT_DIR$/IRLab/views.py" />
       </list>
     </option>
   </component>
@@ -196,24 +173,6 @@
             <path>
               <item name="test" type="b2602c69:ProjectViewProjectNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="test" type="b2602c69:ProjectViewProjectNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="IRLab" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="test" type="b2602c69:ProjectViewProjectNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="IRLab" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="test" type="b2602c69:ProjectViewProjectNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="IRLab" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="application" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -760,20 +719,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/IRLab/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="175" column="27" lean-forward="false" selection-start-line="175" selection-start-column="27" selection-end-line="175" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/search.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="585">
-          <caret line="39" column="25" lean-forward="true" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
+          <caret line="39" column="25" lean-forward="false" selection-start-line="39" selection-start-column="25" selection-end-line="39" selection-end-column="25" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
@@ -785,6 +734,16 @@
         <state relative-caret-position="109">
           <caret line="16" column="49" lean-forward="false" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/IRLab/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="461">
+          <caret line="177" column="23" lean-forward="true" selection-start-line="177" selection-start-column="23" selection-end-line="177" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

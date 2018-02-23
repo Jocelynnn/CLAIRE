@@ -167,6 +167,11 @@ def search(request):
         ranker_id = ranker.ranker_id
         print(ranker_id)
 
+        proc = subprocess.Popen('pwd', stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                shell=True)
+        output = proc.communicate()[0].decode('utf-8')
+        print(output)
+
         run_script = 'search.py '
         # "python3 searcher.py config.toml "
         commands = "python3 " + run_script + 'search-config.toml ' + "'" + query + "' " + ranker_id
