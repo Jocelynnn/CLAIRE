@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^retrievals/createOldRetrievals/(?P<name>[^/]+)/$', views.show_configs, name='show_configs'),
     url(r'^retrievals/createNewRetrievals/$', views.show_new_retrieval_configs, name='show_new_retrieval_configs'),
     url(r'^retrievals/saveConfigs/(?P<name>[^/]+)/$', views.save_configs, name='save_configs'),
+    url(r'^retrievals/saveNewRetrieval/$', views.save_new_retrieval_configs, name='save_new_retrieval'),
     url(r'^evaluations/myperfs/$', views.show_perfs, name='show_perfs'),
     url(r'^evaluations/$', views.show_perfs, name='show_perfs'),
     url(r'^applications/create/(?P<id>[^/]+)/$', views.create_search_engine, name='create_search_engine'),

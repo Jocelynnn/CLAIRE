@@ -52,7 +52,9 @@ class Absolute_discount(RetrievalMethod):
 
 
 class Own_retrieval(RetrievalMethod):
-    source = models.CharField(max_length=70)
+    source = models.CharField(max_length=100000)
+    file_location = models.CharField(max_length=200)
+    ranker_id = models.CharField(max_length=70, default='CustomizedRanker')
 
 class Peformance(models.Model):
     ranker = models.ForeignKey(RetrievalMethod, on_delete=models.CASCADE)

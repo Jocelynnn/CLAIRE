@@ -35,28 +35,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for ranker,perf_list in  ranker_perfs %}
+                {% for ranker,perf_list in ranker_perfs %}
                     <tr>
                         <td>
                             {{ ranker.name }}
                         </td>
                         <td>
-                            {#                            {{ ranker.p_k1 }}#}
-                            {#                            {{ ranker.p_b }}#}
-                            {#                            {{ ranker.p_k3 }}#}
-                            {#                            {{ ranker.p_lambda }}#}
-                            {#                            {{ ranker.p_mu }}#}
-                            {#                            {{ ranker.p_s }}#}
-                            {#                            {{ ranker.p_delta }}#}
                             <form>
                                 <div class="form-group">
                                     {% for field in ranker_forms|lookup:ranker.id %}
-                                        <div class="row">
-                                            <div class="col-sm-6">{{ field.label_tag }}</div>
-                                            <div class="col">{{ field }}</div>
-                                            {#                                        {{ field.label_tag }}#}
-                                            {#                                        {{ field }}#}
-                                        </div>
+                                        {% if field.label_tag == 'source code' %}
+                                            <div class="row">
+                                                <div class="col">{{ field.label_tag }}</div>
+                                                <div class="col">{{ field }}</div>
+                                            </div>
+                                        {% else %}
+                                            <div class="row">
+                                                <div class="col-sm-6">{{ field.label_tag }}</div>
+                                                <div class="col">{{ field }}</div>
+                                            </div>
+                                        {% endif %}
                                     {% endfor %}
                                 </div>
                             </form>
@@ -72,15 +70,15 @@
                             <td>{{ perf_list.2.map }}</td>
                             {#                            <td>{{ perf_list.2.ndcg }}</td>#}
                         {% else %}
-{#                            <td colspan="2">#}
-{#                                <button class="btn btn-info">evaluate</button>#}
-{#                            </td>#}
-{#                            <td colspan="2">#}
-{#                                <button class="btn btn-info">evaluate</button>#}
-{#                            </td>#}
-{#                            <td colspan="2">#}
-{#                                <button class="btn btn-info">evaluate</button>#}
-{#                            </td>#}
+                            {#                            <td colspan="2">#}
+                            {#                                <button class="btn btn-info">evaluate</button>#}
+                            {#                            </td>#}
+                            {#                            <td colspan="2">#}
+                            {#                                <button class="btn btn-info">evaluate</button>#}
+                            {#                            </td>#}
+                            {#                            <td colspan="2">#}
+                            {#                                <button class="btn btn-info">evaluate</button>#}
+                            {#                            </td>#}
 
                             {#         TODO                   if no ndcg#}
                             <td colspan="1">
@@ -98,7 +96,8 @@
 
                         <td>
                             <button class="btn btn-primary btn-sm" type="submit">
-                                <a class="nav-link" href="{% url  'create_search_engine' ranker.id %}" style="color: white">Create Search
+                                <a class="nav-link" href="{% url  'create_search_engine' ranker.id %}"
+                                   style="color: white">Create Search
                                     Engine</a>
                             </button>
 

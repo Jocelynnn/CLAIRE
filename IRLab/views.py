@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from .models import Post
 from .models import RetrievalMethod, Peformance, Code
-from .forms import bm25Form, jmForm, dpForm, plForm, adForm,OwnRetrievalForm
+from .forms import bm25Form, jmForm, dpForm, plForm, adForm, ownRetrievalForm,ownRetrievalFormForDisplay
 import metapy
 import json
 import time
@@ -11,8 +11,12 @@ from django.conf import settings
 import pytoml
 from collections import defaultdict
 from django_tables2 import RequestConfig
-from .table import RankerTable,PerfTable
+from .table import RankerTable, PerfTable
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+import math
+import random
+from pathlib import Path
 
 
 
@@ -22,8 +26,10 @@ def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
 
+
 def show_home(request):
-    return render(request,'blog/home.html')
+    return render(request, 'blog/home.html')
+
 
 @login_required
 def show_perfs(request):
@@ -31,6 +37,7 @@ def show_perfs(request):
     table = PerfTable(Peformance.objects.filter(ranker__in=rankers))
     RequestConfig(request).configure(table)
     return render(request, 'evaluation/myperfs.html', {'table': table})
+
 
 # @login_required
 # # TODO REMOVE LATER
@@ -49,23 +56,23 @@ def show_rankers(request):
     for ranker in rankers:
         perfs = Peformance.objects.filter(ranker=ranker)
         # ranker_perfs[ranker].append(get_empty_form(ranker.name))
-        ranker_perfs[ranker]= perfs
+        ranker_perfs[ranker] = perfs
         curt_form = get_filled_form(ranker)
         for key in curt_form.fields.keys():
             curt_form.fields[key].widget.attrs['readonly'] = True
             curt_form.fields[key].widget.attrs['class'] = 'form-control'
         ranker_forms[ranker.id] = curt_form
 
-
     print(ranker_perfs)
     print(rankers)
     print(ranker_forms)
-    return render(request, 'retrieval/myRetrievals.html', {'rankers': rankers, 'ranker_perfs':ranker_perfs.items(), 'ranker_forms':ranker_forms})
+    return render(request, 'retrieval/myRetrievals.html',
+                  {'rankers': rankers, 'ranker_perfs': ranker_perfs.items(), 'ranker_forms': ranker_forms})
 
 
 def show_new_retrieval_configs(request):
-    form = OwnRetrievalForm()
-    return render(request,'retrieval/createNewRetrievals.html',{'form':form})
+    form = ownRetrievalForm()
+    return render(request, 'retrieval/createNewRetrievals.html', {'form': form})
 
 
 # show configuring form for one of the retrieval function
@@ -85,6 +92,30 @@ def show_configs(request, name):
     return render(request, 'retrieval/createOldRetrievals.html', {'name': name, 'form': curt_form})
 
 
+def save_new_retrieval_configs(request):
+    if request.method == "POST":
+        curt_form = ownRetrievalForm(request.POST)
+
+        if curt_form.is_valid():
+            curt_retrieval = curt_form.save(commit=False)
+            curt_retrieval.author = request.user
+            curt_retrieval.source = request.POST.get('code',None)
+
+            while True:
+                _num = random.randint(1,10000)
+                file_name = str(_num) + '.py'
+                base_dir = os.path.abspath(os.path.join(settings.BASE_DIR,'IRLab/uploads/'))
+                file_path = os.path.join(base_dir,file_name)
+                my_file = Path(file_path)
+                if not my_file.is_file():
+                    with open(my_file,'w+') as fout:
+                        fout.write(curt_retrieval.source)
+                        curt_retrieval.file_location = my_file
+                        break
+            curt_retrieval.save()
+            return redirect('show_retrievals')
+
+
 def save_configs(request, name):
     # save retrieval method to db, re-render to?
     if request.method == "POST":
@@ -100,10 +131,10 @@ def save_configs(request, name):
             curt_form = adForm(request.POST)
 
         if curt_form.is_valid():
-            curt_method = curt_form.save(commit=False)
-            curt_method.author = request.user
-            curt_method.name = name
-            curt_method.save()
+            curt_retrieval = curt_form.save(commit=False)
+            curt_retrieval.author = request.user
+            curt_retrieval.name = name
+            curt_retrieval.save()
             return render(request, 'retrieval/createOldRetrievals.html', {'name': name, 'form': curt_form})
     else:
         curt_form = bm25Form()
@@ -167,6 +198,8 @@ def get_empty_form(ranker_name):
         curt_form = jmForm()
     elif ranker_name == 'Absolute Discount Smoothing':
         curt_form = adForm()
+    else:
+        curt_form = ownRetrievalForm()
     return curt_form
 
 
@@ -181,8 +214,9 @@ def get_filled_form(ranker):
         curt_form = jmForm(instance=ranker)
     elif ranker.name == 'Absolute Discount Smoothing':
         curt_form = adForm(instance=ranker)
+    else:
+        curt_form = ownRetrievalFormForDisplay(instance=ranker)
     return curt_form
-
 
 
 class Searcher:

@@ -6,7 +6,7 @@
             <h1 class="h2">Parameter Settings for {{ name }}</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
-{#                    <button class="btn btn-sm btn-outline-secondary" type="submit">Save to My Retrieval Functions</button>#}
+                    {#                    <button class="btn btn-sm btn-outline-secondary" type="submit">Save to My Retrieval Functions</button>#}
                     {#                    <button class="btn btn-sm btn-outline-secondary" href="">Save</button>#}
                     {#                    <button class="btn btn-sm btn-outline-secondary">Export</button>#}
                 </div>
@@ -25,18 +25,13 @@
                         {% for field in form %}
                             <tr>
                                 <td>
-{#                                    <label for="{{ field.label }}"#}
-{#                                           style="display:inline-block;vertical-align:middle">{{ field.label_tag }}</label>#}
-                                                                {{ field.label_tag }}
+                                    {{ field.label_tag }}
                                 </td>
                                 <td>
                                     {{ field }}
                                 </td>
                             </tr>
                         {% endfor %}
-                        {#                <tr>#}
-                        {#                    <td><button class="btn btn-sm btn-outline-secondary" type="submit">Save to My Retrieval Functions</button></td>#}
-                        {#                </tr>#}
                         </tbody>
                     </table>
 

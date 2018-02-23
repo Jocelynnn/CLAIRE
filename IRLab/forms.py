@@ -61,16 +61,36 @@ class CodeForm(forms.ModelForm):
         fields = ('text',)
 
 
-class OwnRetrievalForm(forms.Form):
+class ownRetrievalForm(forms.ModelForm):
+    # read sample ranker to set default value
+    class Meta:
+        model = Own_retrieval
+        fields = ('name',)
+        labels = {
+            'name': _('Enter the name of your retrieval function')
+        }
+
     sample_file = 'IRLab/static/sample.py'
     sample_file = os.path.join(os.path.abspath(settings.BASE_DIR), sample_file)
     sample = ''
     with open(sample_file) as f:
         sample = f.readlines()
-
     sample = ''.join(sample)
 
+    # one textarea: source
     code = forms.CharField(
-        label='Or implement your retrieval function here',
+        label='Implement your retrieval function',
         initial=sample,
         widget=CodeMirrorEditor(options={'mode': 'python', 'theme': 'eclipse', 'lineNumbers': True, }))
+
+
+class ownRetrievalFormForDisplay(forms.ModelForm):
+    class Meta:
+        model = Own_retrieval
+        fields = ('source',)
+        labels = {
+            'source':_('source code')
+        }
+        widgets = {
+            'source': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
+        }
