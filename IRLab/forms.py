@@ -92,5 +92,5 @@ class ownRetrievalFormForDisplay(forms.ModelForm):
             'source':_('source code')
         }
         widgets = {
-            'source': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
+            'source': forms.Textarea(attrs={'cols': 80, 'rows': 2}),
         }

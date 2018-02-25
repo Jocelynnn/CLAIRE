@@ -13,34 +13,35 @@
                 <tr>
                     <th rowspan="2">Ranker</th>
                     <th rowspan="2">Parameters</th>
-                    {#                    <th colspan="2">Cranfield</th>#}
-                    {#                    <th colspan="2">Apnews</th>#}
-                    {#                    <th colspan="2">Trec</th>#}
+                    <th colspan="2">Apnews</th>
+                    <th colspan="2">Cranfield</th>
+                    <th colspan="2">Trec</th>
 
                     {#      TODO                      if no ndcg#}
 
-                    <th>Cranfield</th>
-                    <th>Apnews</th>
-                    <th>Trec</th>
+                    {#                    <th>Cranfield</th>#}
+                    {#                    <th>Apnews</th>#}
+                    {#                    <th>Trec</th>#}
 
                     <th rowspan="2">Application</th>
                 </tr>
                 <tr>
                     <th scope="col">map</th>
-                    {#                    <th scope="col">NDCG</th>#}
+                    <th scope="col">NDCG</th>
                     <th scope="col">map</th>
-                    {#                    <th scope="col">NDCG</th>#}
+                    <th scope="col">NDCG</th>
                     <th scope="col">map</th>
-                    {#                    <th scope="col">NDCG@</th>#}
+                    <th scope="col">NDCG@</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for ranker,perf_list in ranker_perfs %}
+                {% for ranker,perfs_dict in ranker_perfs %}
                     <tr>
                         <td>
                             {{ ranker.name }}
                         </td>
                         <td>
+                            {#                        list all parameters#}
                             <form>
                                 <div class="form-group">
                                     {% for field in ranker_forms|lookup:ranker.id %}
@@ -58,45 +59,111 @@
                                     {% endfor %}
                                 </div>
                             </form>
-
                         </td>
 
-                        {% if perf_list %}
-                            <td>{{ perf_list.0.map }}</td>
-                            {#                            <td>{{ perf_list.0.ndcg }}</td>#}
+                        {#                        list all evaluations #}
+                        {% if perfs_dict %}
+                            {#                            apnews#}
 
-                            <td>{{ perf_list.1.map }}</td>
-                            {#                            <td>{{ perf_list.1.ndcg }}</td>#}
-                            <td>{{ perf_list.2.map }}</td>
-                            {#                            <td>{{ perf_list.2.ndcg }}</td>#}
+                            {% if perfs_dict|lookup:'apnews' %}
+                                {% with perfs_dict|lookup:'apnews' as curt_perf%}
+                                <td>{{ curt_perf.map }}</td>
+                                <td>{{ curt_perf.ndcg }}</td>
+                                {% endwith %}
+                            {% else %}
+                                <td colspan="2">
+                                    <form method="post" action="{% url 'evaluate' ranker.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="id" value="{{ ranker.id }}">
+                                        <input type="hidden" name="dataset" value="apnews">
+                                        <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
+                                    </form>
+                                    </button>
+                                </td>
+                            {% endif %}
+
+                            {#                            cranfield#}
+                            {% if perfs_dict|lookup:'cranfield' %}
+                                {% with perfs_dict|lookup:'cranfield' as curt_perf%}
+                                <td>{{ curt_perf.map }}</td>
+                                <td>{{ curt_perf.ndcg }}</td>
+                                {% endwith %}
+                            {% else %}
+                                <td colspan="2">
+                                    <form method="post" action="{% url 'evaluate' ranker.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="id" value="{{ ranker.id }}">
+                                        <input type="hidden" name="dataset" value="cranfield">
+                                        <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
+                                    </form>
+                                    </button>
+                                </td>
+                            {% endif %}
+
+                            {#                            trec#}
+                            {% if perfs_dict|lookup:'trec' %}
+                                {% with perfs_dict|lookup:'trec' as curt_perf%}
+                                <td>{{ curt_perf.map }}</td>
+                                <td>{{ curt_perf.ndcg }}</td>
+                                {% endwith %}
+                            {% else %}
+                                <td colspan="2">
+                                    <form method="post" action="{% url 'evaluate' ranker.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="id" value="{{ ranker.id }}">
+                                        <input type="hidden" name="dataset" value="trec">
+                                        <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
+                                    </form>
+                                    </button>
+                                </td>
+                            {% endif %}
                         {% else %}
-                            {#                            <td colspan="2">#}
-                            {#                                <button class="btn btn-info">evaluate</button>#}
-                            {#                            </td>#}
-                            {#                            <td colspan="2">#}
-                            {#                                <button class="btn btn-info">evaluate</button>#}
-                            {#                            </td>#}
-                            {#                            <td colspan="2">#}
-                            {#                                <button class="btn btn-info">evaluate</button>#}
-                            {#                            </td>#}
 
-                            {#         TODO                   if no ndcg#}
-                            <td colspan="1">
-                                <button class="btn btn-primary">evaluate</button>
+                            <td colspan="2">
+                                <form method="post" action="{% url 'evaluate' ranker.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ ranker.id }}">
+                                    <input type="hidden" name="dataset" value="apnews">
+                                    <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
+                                </form>
+                                </button>
                             </td>
-                            <td colspan="1">
-                                <button class="btn btn-primary">evaluate</button>
+                            <td colspan="2">
+                                <form method="post" action="{% url 'evaluate' ranker.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ ranker.id }}">
+                                    <input type="hidden" name="dataset" value="cranfield">
+                                    <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
+                                </form>
+                                </button>
                             </td>
-                            <td colspan="1">
-                                <button class="btn btn-primary">evaluate</button>
+                            <td colspan="2">
+                                <form method="post" action="{% url 'evaluate' ranker.id %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ ranker.id }}">
+                                    <input type="hidden" name="dataset" value="trec">
+                                    <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
+                                </form>
+                                </button>
                             </td>
 
+                            {#                            {% for i in "123"|ljust:"3" %}#}
+                            {#                                <td colspan="2">#}
+                            {#                                    <form method="post" action="{% url 'evaluate' ranker.id %}">#}
+                            {#                                        {% csrf_token %}#}
+                            {#                                        <input type="hidden" name="id" value="{{ ranker.id }}">#}
+                            {#                                        <input type="hidden" name="dataset" value="cranfield">#}
+                            {#                                        <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>#}
+                            {#                                    </form>#}
+                            {#                                    </button>#}
+                            {#                                </td>#}
+                            {#                            {% endfor %}#}
                         {% endif %}
 
 
                         <td>
                             <button class="btn btn-primary btn-sm" type="submit">
-                                <a class="nav-link" href="{% url  'create_search_engine' ranker.id %}"
+                                <a href="{% url  'create_search_engine' ranker.id %}"
                                    style="color: white">Create Search
                                     Engine</a>
                             </button>

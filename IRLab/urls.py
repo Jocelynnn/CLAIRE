@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^retrievals/saveNewRetrieval/$', views.save_new_retrieval_configs, name='save_new_retrieval'),
     url(r'^evaluations/myperfs/$', views.show_perfs, name='show_perfs'),
     url(r'^evaluations/$', views.show_perfs, name='show_perfs'),
+    url(r'^evaluations/evaluate/(?P<id>[^/]+)/$', views.evaluate, name='evaluate'),
     url(r'^applications/create/(?P<id>[^/]+)/$', views.create_search_engine, name='create_search_engine'),
     url(r'^applications/search/$', views.search, name='search'),
 

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from .models import Post
 from .models import RetrievalMethod, Peformance, Code
-from .forms import bm25Form, jmForm, dpForm, plForm, adForm, ownRetrievalForm,ownRetrievalFormForDisplay
+from .forms import bm25Form, jmForm, dpForm, plForm, adForm, ownRetrievalForm, ownRetrievalFormForDisplay
 import metapy
 import json
 import time
@@ -17,9 +17,6 @@ from django.shortcuts import redirect
 import random
 from pathlib import Path
 import subprocess
-
-
-
 
 
 # Create your views here.
@@ -55,18 +52,21 @@ def show_rankers(request):
     ranker_perfs = defaultdict()
     ranker_forms = defaultdict()
     for ranker in rankers:
-        perfs = Peformance.objects.filter(ranker=ranker)
-        # ranker_perfs[ranker].append(get_empty_form(ranker.name))
-        ranker_perfs[ranker] = perfs
+        perfs = Peformance.objects.filter(ranker=ranker).order_by('dataset')
+        perfs_dict = {} # dataset - perfs mapping, used for rendering
+        for perf in perfs:
+            perfs_dict[perf.dataset] = perf
+
+        ranker_perfs[ranker] = perfs_dict
         curt_form = get_filled_form(ranker)
         for key in curt_form.fields.keys():
             curt_form.fields[key].widget.attrs['readonly'] = True
             curt_form.fields[key].widget.attrs['class'] = 'form-control'
         ranker_forms[ranker.id] = curt_form
 
-    print(ranker_perfs)
-    print(rankers)
-    print(ranker_forms)
+    # print(ranker_perfs)
+    # print(rankers)
+    # print(ranker_forms)
     return render(request, 'retrieval/myRetrievals.html',
                   {'rankers': rankers, 'ranker_perfs': ranker_perfs.items(), 'ranker_forms': ranker_forms})
 
@@ -100,16 +100,16 @@ def save_new_retrieval_configs(request):
         if curt_form.is_valid():
             curt_retrieval = curt_form.save(commit=False)
             curt_retrieval.author = request.user
-            curt_retrieval.source = request.POST.get('code',None)
+            curt_retrieval.source = request.POST.get('code', None)
 
             while True:
-                _num = random.randint(1,10000)
+                _num = random.randint(1, 10000)
                 file_name = str(_num) + '.py'
-                base_dir = os.path.abspath(os.path.join(settings.BASE_DIR,'IRLab/uploads/'))
-                file_path = os.path.join(base_dir,file_name)
+                base_dir = os.path.abspath(os.path.join(settings.BASE_DIR, 'IRLab/uploads/'))
+                file_path = os.path.join(base_dir, file_name)
                 my_file = Path(file_path)
                 if not my_file.is_file():
-                    with open(my_file,'w+') as fout:
+                    with open(my_file, 'w+') as fout:
                         fout.write(curt_retrieval.source)
                         curt_retrieval.file_location = my_file
                         break
@@ -160,30 +160,63 @@ def create_search_engine(request, id):
 def search(request):
     if request.method == 'POST':
         ranker = RetrievalMethod.objects.get(id=request.POST.get('id', None))
-        # searcher.search(request)
-        print('inside create enginee!!!!')
         query = request.POST.get('query_text', None)
-        print(query)
+        # print(query)
         ranker_id = ranker.ranker_id
-        print(ranker_id)
+        # print(ranker_id)
 
-        proc = subprocess.Popen('pwd', stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                shell=True)
-        output = proc.communicate()[0].decode('utf-8')
-        print(output)
+        # proc = subprocess.Popen('pwd', stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        #                         shell=True)
+        # output = proc.communicate()[0].decode('utf-8')
+        # print(output)
 
         run_script = 'search.py '
+        config_file, config_params = generate_search_config(ranker)
         # "python3 searcher.py config.toml "
-        commands = "python3 " + run_script + 'search-config.toml ' + "'" + query + "' " + ranker_id
+        commands = "python3 " + run_script + config_file + " '" + query + "' " + ranker_id + " '" + config_params + "' "
         print(commands)
         proc = subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                 shell=True)
         output = proc.communicate()[0].decode('utf-8')
-        print(output)
+        # print(output)
 
         response = json.loads(output)
+
         return render(request, 'application/demo.html',
-                      {'ranker_name': ranker.name, 'response': response, 'id': ranker.id, 'ranker_id': ranker.ranker_id})
+                      {'ranker_name': ranker.name, 'response': response, 'id': ranker.id,
+                       'ranker_id': ranker.ranker_id})
+
+
+def evaluate(request, id):
+    '''
+
+    :param request:
+    :param id: ranker id in db
+    :param dataset: dataset to evaluate on
+    :return:
+    '''
+    ranker = RetrievalMethod.objects.get(id=id)
+    ranker_id = ranker.ranker_id
+
+    dataset = request.POST.get('dataset','cranfield')
+
+    run_script = 'eval.py '
+    # "python3 searcher.py config.toml "
+    config_file, config_params = generate_eval_config(ranker, dataset)
+    commands = "python3 " + run_script + config_file + " " + ranker_id + " '" + config_params + "' "
+    print(commands)
+    proc = subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            shell=True)
+    output = proc.communicate()[0].decode('utf-8')
+    print(output)
+    response = json.loads(output)
+    # print(response)
+
+    perf = Peformance(ranker=ranker, dataset=dataset, map=response['map'],
+                      ndcg=response['ndcg'], elapsed_time=response['elapsed_time'])
+    perf.save()
+
+    return redirect('show_retrievals')
 
 
 def get_empty_form(ranker_name):
@@ -216,6 +249,88 @@ def get_filled_form(ranker):
     else:
         curt_form = ownRetrievalFormForDisplay(instance=ranker)
     return curt_form
+
+
+def generate_search_config(ranker):
+    dict = {}
+    dict['stop-words'] = "data/lemur-stopwords.txt"
+    dict['prefix'] = "."
+    dict['dataset'] = "apnews"
+    dict['corpus'] = "line.toml"
+    dict['index'] = "apnews-index"
+    dict['query-judgements'] = "qrels.txt"
+
+    dict['analyzers'] = [{'method': "ngram-word",
+                          'ngram': 1,
+                          'filter': "default-unigram-chain"}]
+
+    dict['ranker'] = {'method': ranker.ranker_id_4_config}
+
+    config_params = ''
+    for key, value in ranker.__dict__.items():
+        key = str(key)
+        # print(key)
+        if key.startswith('p_'):
+            dict['ranker'][key[2:]] = round(float(value), 4)
+            config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
+
+    # while True:
+    #     _num = random.randint(1, 10000)
+    #     file_name = 'c-'+str(_num) + '.toml'
+    #     base_dir = os.path.abspath(settings.BASE_DIR)
+    #     file_path = os.path.join(base_dir, file_name)
+    #     my_file = Path(file_path)
+    #     if not my_file.is_file():
+    #         with open(my_file, 'w+') as fout:
+    #             pytoml.dump(fout, dict)
+    #             break
+    file_name = 'temp.toml'
+    with open(file_name, 'w+') as fout:
+        pytoml.dump(fout, dict)
+    return file_name, config_params.strip(',')
+
+
+def generate_eval_config(ranker, dataset):
+    # dataset = 'cranfield'
+    start_index = {'cranfield':1,'apnews':0}
+    print('dataset!!', dataset)
+    dict = {}
+    dict['stop-words'] = "data/lemur-stopwords.txt"
+    dict['prefix'] = "."
+    dict['dataset'] = dataset
+    dict['corpus'] = "line.toml"
+    dict['index'] = dataset + "-index"
+    dict['query-judgements'] = "data/" + dataset + "-qrels.txt"
+
+    dict['analyzers'] = [{'method': "ngram-word",
+                          'ngram': 1,
+                          'filter': "default-unigram-chain"}]
+
+    dict['query-runner'] = {'query-path': "data/" + dataset + "-queries.txt",
+                            'query-id-start': start_index[dataset]
+                            }
+
+    config_params = ''
+    for key, value in ranker.__dict__.items():
+        key = str(key)
+        # print(key)
+        if key.startswith('p_'):
+            config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
+
+    # while True:
+    #     _num = random.randint(1, 10000)
+    #     file_name = 'c-'+str(_num) + '.toml'
+    #     base_dir = os.path.abspath(settings.BASE_DIR)
+    #     file_path = os.path.join(base_dir, file_name)
+    #     my_file = Path(file_path)
+    #     if not my_file.is_file():
+    #         with open(my_file, 'w+') as fout:
+    #             pytoml.dump(fout, dict)
+    #             break
+    file_name = 'temp.toml'
+    with open(file_name, 'w+') as fout:
+        pytoml.dump(fout, dict)
+    return file_name, config_params.strip(',')
 
 
 class Searcher:

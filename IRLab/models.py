@@ -19,6 +19,7 @@ class Okapi_bm25(RetrievalMethod):
     # https://meta-toolkit.org/doxygen/classmeta_1_1index_1_1okapi__bm25.html
     # const float   k1_ Doc term smoothing
     ranker_id = models.CharField(max_length=70, default='OkapiBM25')
+    ranker_id_4_config = models.CharField(max_length=70, default='bm25')
     p_k1 = models.FloatField()
     # Length normalization. 
     p_b = models.FloatField()
@@ -30,24 +31,29 @@ class Jelinek_mercer(RetrievalMethod):
     # https://meta-toolkit.org/doxygen/classmeta_1_1index_1_1jelinek__mercer.html
     p_lambda = models.FloatField()
     ranker_id = models.CharField(max_length=70, default='JelinekMercer')
+    ranker_id_4_config = models.CharField(max_length=70, default='jelinek-mercer')
 
 
 class Dirichlet_prior(RetrievalMethod):
     # https://meta-toolkit.org/doxygen/classmeta_1_1index_1_1dirichlet__prior.html
     p_mu = models.FloatField()
     ranker_id = models.CharField(max_length=70, default='DirichletPrior')
+    ranker_id_4_config = models.CharField(max_length=70, default='dirichlet-prior')
 
 
 class Pivoted_length(RetrievalMethod):
     # https://meta-toolkit.org/doxygen/classmeta_1_1index_1_1pivoted__length.html
     p_s = models.FloatField()
     ranker_id = models.CharField(max_length=70, default='PivotedLength')
+    ranker_id_4_config = models.CharField(max_length=70, default='pivoted-length')
+
 
 
 class Absolute_discount(RetrievalMethod):
     # https://meta-toolkit.org/doxygen/classmeta_1_1index_1_1absolute__discount.html
     p_delta = models.FloatField()
     ranker_id = models.CharField(max_length=70, default='AbsoluteDiscount')
+    ranker_id_4_config = models.CharField(max_length=70, default='absolute-discount')
 
 
 
@@ -55,6 +61,7 @@ class Own_retrieval(RetrievalMethod):
     source = models.CharField(max_length=100000)
     file_location = models.CharField(max_length=200)
     ranker_id = models.CharField(max_length=70, default='CustomizedRanker')
+    ranker_id_4_config = models.CharField(max_length=70, default='customzied-ranker')
 
 class Peformance(models.Model):
     ranker = models.ForeignKey(RetrievalMethod, on_delete=models.CASCADE)

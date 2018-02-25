@@ -1,0 +1,15 @@
+stop-words = "data/lemur-stopwords.txt"
+prefix = "."
+dataset = "apnews"
+corpus = "line.toml"
+index = "apnews-index"
+query-judgements = "data/apnews-qrels.txt"
+
+[query-runner]
+query-path = "data/apnews-queries.txt"
+query-id-start = 0
+
+[[analyzers]]
+method = "ngram-word"
+ngram = 1
+filter = "default-unigram-chain"
