@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="917f0d0a-3446-4673-8107-58ce09de8feb" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/IRLab/uploads/7771.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/IRLab/templates/retrieval/createNewRetrievals.html" afterPath="$PROJECT_DIR$/IRLab/templates/retrieval/createNewRetrievals.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/IRLab/templates/retrieval/myRetrievals.html" afterPath="$PROJECT_DIR$/IRLab/templates/retrieval/myRetrievals.html" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -76,11 +74,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="createNewRetrievals.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="createNewRetrievals.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/IRLab/templates/retrieval/createNewRetrievals.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
+            <state relative-caret-position="379">
               <caret line="35" column="146" lean-forward="false" selection-start-line="35" selection-start-column="146" selection-end-line="35" selection-end-column="146" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="myRetrievals.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/IRLab/templates/retrieval/myRetrievals.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="495">
+              <caret line="33" column="40" lean-forward="false" selection-start-line="33" selection-start-column="40" selection-end-line="33" selection-end-column="40" />
               <folding />
             </state>
           </provider>
@@ -156,10 +164,10 @@
         <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/temp.toml" />
         <option value="$PROJECT_DIR$/eval.py" />
-        <option value="$PROJECT_DIR$/IRLab/templates/retrieval/myRetrievals.html" />
         <option value="$PROJECT_DIR$/IRLab/views.py" />
         <option value="$PROJECT_DIR$/IRLab/forms.py" />
         <option value="$PROJECT_DIR$/IRLab/templates/retrieval/createNewRetrievals.html" />
+        <option value="$PROJECT_DIR$/IRLab/templates/retrieval/myRetrievals.html" />
       </list>
     </option>
   </component>
@@ -323,8 +331,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1416309" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1416309" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -761,14 +770,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/IRLab/templates/retrieval/myRetrievals.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="35" lean-forward="false" selection-start-line="0" selection-start-column="35" selection-end-line="49" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/search.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="296">
@@ -781,8 +782,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/IRLab/templates/retrieval/createNewRetrievals.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
+        <state relative-caret-position="379">
           <caret line="35" column="146" lean-forward="false" selection-start-line="35" selection-start-column="146" selection-end-line="35" selection-end-column="146" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/IRLab/templates/retrieval/myRetrievals.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="40" lean-forward="false" selection-start-line="33" selection-start-column="40" selection-end-line="33" selection-end-column="40" />
           <folding />
         </state>
       </provider>
