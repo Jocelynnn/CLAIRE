@@ -18,7 +18,6 @@ import random
 from pathlib import Path
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart
-from graphos.sources.model import ModelDataSource
 import subprocess
 
 
