@@ -16,6 +16,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 import random
 from pathlib import Path
+from graphos.sources.simple import SimpleDataSource
+from graphos.renderers.gchart import LineChart
+from graphos.sources.model import ModelDataSource
 import subprocess
 
 
@@ -32,9 +35,85 @@ def show_home(request):
 @login_required
 def show_perfs(request):
     rankers = RetrievalMethod.objects.filter(author=request.user)
-    table = PerfTable(Peformance.objects.filter(ranker__in=rankers))
-    RequestConfig(request).configure(table)
-    return render(request, 'evaluation/myperfs.html', {'table': table})
+    perfs = Peformance.objects.filter(ranker__in=rankers)
+    table1 = PerfTable(Peformance.objects.filter(ranker__in=rankers, dataset='apnews'), prefix="ap")
+    table2 = PerfTable(Peformance.objects.filter(ranker__in=rankers, dataset='cranfield'), prefix="cr")
+
+    RequestConfig(request).configure(table1)
+    RequestConfig(request).configure(table2)
+    return render(request, 'evaluation/myperfs.html', {'table1': table1, 'table2': table2})
+
+
+def show_perfs_analysis(request):
+    if request.method == 'POST':
+        dataset = request.POST.get('dataset-dropdown', None)
+        ranker_name = request.POST.get('ranker-dropdown', None)
+
+        print(dataset)
+        print(ranker_name)
+
+        rankers = RetrievalMethod.objects.filter(name=ranker_name)
+        print(len(rankers))
+        perfs = Peformance.objects.filter(ranker__in=rankers, dataset=dataset)
+
+        params = []
+        data = []
+        if len(rankers) > 0:
+            ranker = rankers[0]
+            for key, value in ranker.__dict__.items():
+                key = str(key)
+                # print(key)
+                if key.startswith('p_'):
+                    params.append((key, str(key[2:]).upper()))
+
+            # only support ranker with one parameter
+            if len(params) > 1:
+                print('not valid')
+            else:
+
+                data.append([params[0][1], 'Map'])
+                param_map = [(perf.ranker.__getattribute__(params[0][0]), perf.map) for perf in perfs]
+                param_map = sorted(param_map, key=lambda pair: pair[0])
+
+                for pair in param_map:
+                    data.append([pair[0], pair[1]])
+
+
+    else:
+        # start from DL ranker
+        dataset = 'apnews'
+        ranker_name = 'Dirichlet Prior Smoothing'
+
+        rankers = RetrievalMethod.objects.filter(author=request.user, name='Dirichlet Prior Smoothing')
+        perfs = Peformance.objects.filter(ranker__in=rankers, dataset='apnews')
+
+        data = []
+        data.append(['Mu', 'Map'])
+        param_map = [(perf.ranker.p_mu, perf.map) for perf in perfs]
+        param_map = sorted(param_map, key=lambda pair: pair[0])
+        for pair in param_map:
+            data.append([pair[0], pair[1]])
+
+
+    # DataSource object
+    data_source = SimpleDataSource(data=data)
+    # Chart object
+    options = {
+        'title': 'Dirichlet Prior: Mu-Map',
+        'curveType': 'function',
+        'width': '900',
+        'height': '500',
+        'hAxis': {
+            'title': 'Mu'
+        },
+        'vAxis': {
+            'title': 'Map'
+        },
+    }
+    chart = LineChart(data_source, options=options)
+    context = {'chart': chart, 'dataset': dataset, 'ranker_name': ranker_name}
+
+    return render(request, 'application/charts.html', context)
 
 
 # @login_required
@@ -53,7 +132,7 @@ def show_rankers(request):
     ranker_forms = defaultdict()
     for ranker in rankers:
         perfs = Peformance.objects.filter(ranker=ranker).order_by('dataset')
-        perfs_dict = {} # dataset - perfs mapping, used for rendering
+        perfs_dict = {}  # dataset - perfs mapping, used for rendering
         for perf in perfs:
             perfs_dict[perf.dataset] = perf
 
@@ -105,7 +184,7 @@ def save_new_retrieval_configs(request):
             while True:
                 _num = random.randint(1, 10000)
                 file_name = str(_num) + '.py'
-                base_dir = os.path.abspath(os.path.join(settings.BASE_DIR, 'IRLab/uploads/'))
+                base_dir = os.path.abspath(os.path.join(settings.BASE_DIR, 'uploads/'))
                 file_path = os.path.join(base_dir, file_name)
                 my_file = Path(file_path)
                 if not my_file.is_file():
@@ -170,7 +249,19 @@ def search(request):
         # output = proc.communicate()[0].decode('utf-8')
         # print(output)
 
-        run_script = 'search.py '
+        if ranker_id == 'CustomizedRanker':
+            run_script = 'search_customized.py '
+
+            with open(ranker.file_location) as target_ranker, \
+                    open('search_customized.py', 'w') as target_script, \
+                    open('search.py', 'r') as fin:
+                base = fin.read()
+                base = base.replace("ranker = getattr(metapy.index, ranker_id)(**params)", "ranker = MyRanker()")
+                target_script.write(target_ranker.read() + '\n')
+                target_script.write(base)
+        else:
+            run_script = 'search.py '
+
         config_file, config_params = generate_search_config(ranker)
         # "python3 searcher.py config.toml "
         commands = "python3 " + run_script + config_file + " '" + query + "' " + ranker_id + " '" + config_params + "' "
@@ -198,9 +289,21 @@ def evaluate(request, id):
     ranker = RetrievalMethod.objects.get(id=id)
     ranker_id = ranker.ranker_id
 
-    dataset = request.POST.get('dataset','cranfield')
+    dataset = request.POST.get('dataset', 'cranfield')
 
-    run_script = 'eval.py '
+    if ranker_id == 'CustomizedRanker':
+        run_script = 'eval_customized.py '
+        with open(ranker.file_location) as target_ranker, \
+                open('eval_customized.py', 'w') as target_script, \
+                open('eval.py', 'r') as fin:
+            base = fin.read()
+            base = base.replace("ranker = load_ranker(ranker_id, params)", "ranker = MyRanker()")
+            target_script.write(target_ranker.read() + '\n')
+            target_script.write(base)
+    else:
+
+        run_script = 'eval.py '
+
     # "python3 searcher.py config.toml "
     config_file, config_params = generate_eval_config(ranker, dataset)
     commands = "python3 " + run_script + config_file + " " + ranker_id + " '" + config_params + "' "
@@ -208,6 +311,7 @@ def evaluate(request, id):
     proc = subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                             shell=True)
     output = proc.communicate()[0].decode('utf-8')
+
     print(output)
     response = json.loads(output)
     # print(response)
@@ -292,7 +396,7 @@ def generate_search_config(ranker):
 
 def generate_eval_config(ranker, dataset):
     # dataset = 'cranfield'
-    start_index = {'cranfield':1,'apnews':0}
+    start_index = {'cranfield': 1, 'apnews': 0}
     print('dataset!!', dataset)
     dict = {}
     dict['stop-words'] = "data/lemur-stopwords.txt"

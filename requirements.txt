@@ -15,3 +15,4 @@ django-widget-tweaks
 django-tables2
 django-froala-editor
 django-codemirror2
+django_chartit

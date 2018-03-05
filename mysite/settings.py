@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'IRLab',
     'froala_editor',
     'codemirror2',
+    'chartit',
+    'graphos'
+
 ]
 
 MIDDLEWARE = [

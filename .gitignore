@@ -10,3 +10,6 @@ db.sqlite3
 /ap-index
 .idea/
 /IRLab/search-config.toml
+apnews*
+cranfield*
+

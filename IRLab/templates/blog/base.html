@@ -39,16 +39,16 @@
                 <a class="nav-link" href="{% url 'show_perfs' %}">Evaluations</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Performance Analysis</a>
+                <a class="nav-link" href="{% url 'perf_analysis' %}">Performance Analysis</a>
             </li>
         </ul>
 
         {% if user.is_authenticated %}
-            <button class="btn btn-sm" type="submit"><a class="nav-link" href="{% url 'logout' %}">Logout</a>
+            <button class="btn btn-sm btn-outline-primary" type="submit"><a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </button>
             <!-- Hi {{ user.username }}! -->
         {% else %}
-            <button class="btn btn-sm" type="submit"><a class="nav-link" href="{% url 'login' %}">Sign in</a>
+            <button class="btn btn-sm btn-outline-primary" type="submit"><a class="nav-link" href="{% url 'login' %}">Sign in</a>
             </button>
         {% endif %}
     </div>

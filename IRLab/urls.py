@@ -16,5 +16,6 @@ urlpatterns = [
     url(r'^evaluations/evaluate/(?P<id>[^/]+)/$', views.evaluate, name='evaluate'),
     url(r'^applications/create/(?P<id>[^/]+)/$', views.create_search_engine, name='create_search_engine'),
     url(r'^applications/search/$', views.search, name='search'),
+    url(r'^applications/analysis/$', views.show_perfs_analysis, name='perf_analysis'),
 
 ]

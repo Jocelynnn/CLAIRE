@@ -1,0 +1,52 @@
+{% extends "retrieval/main.html" %}
+
+
+{% block config %}
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages: ["corechart"]});
+    </script>
+
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
+
+
+        <form method="post" action="{% url 'perf_analysis' %}">
+            {% csrf_token %}
+            <select name="dataset-dropdown">
+                <option class="dropdown-item" selected="selected" disabled>Dataset</option>
+                <option value="apnews" {% if dataset == 'apnews' %} selected="selected" {% endif %}>Apnews</option>
+                <option value="cranfield" {% if dataset == 'cranfield' %} selected="selected" {% endif %}>Cranfield
+                </option>
+
+            </select>
+
+            <select name="ranker-dropdown">
+                <option class="dropdown-item" selected="selected" disabled>Retrival Function</option>
+                <option value="Okapi BM25" {% if ranker_name == 'Okapi BM25' %} selected="selected"{% endif %}>Okapi
+                    BM25
+                </option>
+                <option value="Pivoted Length Normalization" {% if ranker_name == 'Pivoted Length Normalization' %}
+                        selected="selected"{% endif %}>Pivoted Length Normalization
+                </option>
+                <option value="Dirichlet Prior Smoothing" {% if ranker_name == 'Dirichlet Prior Smoothing' %}
+                        selected="selected"{% endif %}>Dirichlet Prior Smoothing
+                </option>
+                <option value="Jelinek-Mercer Smoothing" {% if ranker_name == 'Jelinek-Mercer Smoothing' %}
+                        selected="selected"{% endif %}>Jelinek-Mercer Smoothing
+                </option>
+                <option value="Absolute Discount Smoothing" {% if ranker_name == 'Absolute Discount Smoothing' %}
+                        selected="selected"{% endif %}>Absolute Discount Smoothing
+                </option>
+
+            </select>
+            <button class="btn btn-outline-primary" type="submit">Analyze</button>
+        </form>
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+            {{ chart.as_html }}
+        </div>
+
+    </main>
+
+{% endblock %}

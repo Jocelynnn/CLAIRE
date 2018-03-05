@@ -1,13 +1,13 @@
 stop-words = "data/lemur-stopwords.txt"
 prefix = "."
-dataset = "apnews"
+dataset = "cranfield"
 corpus = "line.toml"
-index = "apnews-index"
-query-judgements = "data/apnews-qrels.txt"
+index = "cranfield-index"
+query-judgements = "data/cranfield-qrels.txt"
 
 [query-runner]
-query-path = "data/apnews-queries.txt"
-query-id-start = 0
+query-path = "data/cranfield-queries.txt"
+query-id-start = 1
 
 [[analyzers]]
 method = "ngram-word"

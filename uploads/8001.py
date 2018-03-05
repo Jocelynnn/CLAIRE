@@ -6,7 +6,7 @@ class MyRanker(metapy.index.RankingFunction):
     """
 
     def __init__(self, some_param=1.0):
-        self.param = some_param
+        self.c = some_param
         # You *must* call the base class constructor here!
         super(MyRanker, self).__init__()
 

@@ -31,17 +31,18 @@
                     <th scope="col">map</th>
                     <th scope="col">NDCG</th>
                     <th scope="col">map</th>
-                    <th scope="col">NDCG@</th>
+                    <th scope="col">NDCG</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for ranker,perfs_dict in ranker_perfs %}
                     <tr>
+
                         <td>
                             {{ ranker.name }}
                         </td>
                         <td>
-                            {#                        list all parameters#}
+                            {#                        list all parameters or source code#}
                             <form>
                                 <div class="form-group">
                                     {% for field in ranker_forms|lookup:ranker.id %}
@@ -61,110 +62,45 @@
                             </form>
                         </td>
 
-                        {#                        list all evaluations #}
-                        {% if perfs_dict %}
-                            {#                            apnews#}
-
-                            {% if perfs_dict|lookup:'apnews' %}
-                                {% with perfs_dict|lookup:'apnews' as curt_perf%}
-                                <td>{{ curt_perf.map }}</td>
-                                <td>{{ curt_perf.ndcg }}</td>
-                                {% endwith %}
-                            {% else %}
-                                <td colspan="2">
-                                    <form method="post" action="{% url 'evaluate' ranker.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="id" value="{{ ranker.id }}">
-                                        <input type="hidden" name="dataset" value="apnews">
-                                        <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
-                                    </form>
-                                    </button>
-                                </td>
-                            {% endif %}
-
-                            {#                            cranfield#}
-                            {% if perfs_dict|lookup:'cranfield' %}
-                                {% with perfs_dict|lookup:'cranfield' as curt_perf%}
-                                <td>{{ curt_perf.map }}</td>
-                                <td>{{ curt_perf.ndcg }}</td>
-                                {% endwith %}
-                            {% else %}
-                                <td colspan="2">
-                                    <form method="post" action="{% url 'evaluate' ranker.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="id" value="{{ ranker.id }}">
-                                        <input type="hidden" name="dataset" value="cranfield">
-                                        <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
-                                    </form>
-                                    </button>
-                                </td>
-                            {% endif %}
-
-                            {#                            trec#}
-                            {% if perfs_dict|lookup:'trec' %}
-                                {% with perfs_dict|lookup:'trec' as curt_perf%}
-                                <td>{{ curt_perf.map }}</td>
-                                <td>{{ curt_perf.ndcg }}</td>
-                                {% endwith %}
-                            {% else %}
-                                <td colspan="2">
-                                    <form method="post" action="{% url 'evaluate' ranker.id %}">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="id" value="{{ ranker.id }}">
-                                        <input type="hidden" name="dataset" value="trec">
-                                        <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
-                                    </form>
-                                    </button>
-                                </td>
-                            {% endif %}
-                        {% else %}
-
-                            <td colspan="2">
-                                <form method="post" action="{% url 'evaluate' ranker.id %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="id" value="{{ ranker.id }}">
-                                    <input type="hidden" name="dataset" value="apnews">
-                                    <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
-                                </form>
-                                </button>
-                            </td>
-                            <td colspan="2">
-                                <form method="post" action="{% url 'evaluate' ranker.id %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="id" value="{{ ranker.id }}">
-                                    <input type="hidden" name="dataset" value="cranfield">
-                                    <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
-                                </form>
-                                </button>
-                            </td>
-                            <td colspan="2">
-                                <form method="post" action="{% url 'evaluate' ranker.id %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="id" value="{{ ranker.id }}">
-                                    <input type="hidden" name="dataset" value="trec">
-                                    <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
-                                </form>
-                                </button>
-                            </td>
-
-                            {#                            {% for i in "123"|ljust:"3" %}#}
-                            {#                                <td colspan="2">#}
-                            {#                                    <form method="post" action="{% url 'evaluate' ranker.id %}">#}
-                            {#                                        {% csrf_token %}#}
-                            {#                                        <input type="hidden" name="id" value="{{ ranker.id }}">#}
-                            {#                                        <input type="hidden" name="dataset" value="cranfield">#}
-                            {#                                        <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>#}
-                            {#                                    </form>#}
-                            {#                                    </button>#}
-                            {#                                </td>#}
-                            {#                            {% endfor %}#}
-                        {% endif %}
-
+                        {% with my_array='apnews cranfield trec' %}
+                            {% for item in my_array.split %}
+                                {#                        list all evaluations #}
+                                {% if perfs_dict %}
+                                    {% if perfs_dict|lookup:item %}
+                                        {% with perfs_dict|lookup:item as curt_perf %}
+                                            <td>{{ curt_perf.map }}</td>
+                                            <td>{{ curt_perf.ndcg }}</td>
+                                        {% endwith %}
+                                    {% else %}
+                                        <td colspan="2">
+                                            <form method="post" action="{% url 'evaluate' ranker.id %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="id" value="{{ ranker.id }}">
+                                                <input type="hidden" name="dataset" value="{{ item }}">
+                                                <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
+                                            </form>
+                                            </button>
+                                        </td>
+                                    {% endif %}
+                                {% else %}
+                                    {#                            no evaluation data point#}
+                                    <td colspan="2">
+                                        <form method="post" action="{% url 'evaluate' ranker.id %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="id" value="{{ ranker.id }}">
+                                            <input type="hidden" name="dataset" value="{{ item }}">
+                                            <button class="btn btn-primary btn-sm" type="submit">Evaluate</button>
+                                        </form>
+                                        </button>
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
 
                         <td>
                             <button class="btn btn-primary btn-sm" type="submit">
                                 <a href="{% url  'create_search_engine' ranker.id %}"
-                                   style="color: white">Create Search
+                                   style="color: white; text-decoration: none;">Create Search
                                     Engine</a>
                             </button>
 
