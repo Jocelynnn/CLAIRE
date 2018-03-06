@@ -1,11 +1,12 @@
 import metapy
+import math
 
 class MyRanker(metapy.index.RankingFunction):
     """
     Create a new ranking function in Python that can be used in MeTA.
     """
 
-    def __init__(self, some_param=1.0):
+    def __init__(self, some_param=0.5):
         self.c = some_param
         # You *must* call the base class constructor here!
         super(MyRanker, self).__init__()
