@@ -365,6 +365,7 @@ def generate_search_config(ranker,is_server = True):
                               'ngram': 1,
                               'filter': "default-unigram-chain"}]
 
+        dict['ranker'] = {'method': ranker.ranker_id_4_config}
 
         config_params = ''
         for key, value in ranker.__dict__.items():
