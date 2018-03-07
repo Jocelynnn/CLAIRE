@@ -162,7 +162,7 @@ def show_perfs(request):
     RequestConfig(request).configure(table2)
     return render(request, 'evaluation/myperfs.html', {'table1': table1, 'table2': table2})
 
-
+@login_required
 def show_perfs_analysis(request):
     if request.method == 'POST':
         dataset = request.POST.get('dataset-dropdown', None)
