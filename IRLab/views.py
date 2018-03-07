@@ -359,7 +359,7 @@ def generate_search_config(ranker,is_server = True):
         dict['prefix'] = "."
         dict['dataset'] = "wikipedia"
         dict['corpus'] = "line.toml"
-        dict['index'] = "wikipedia-index"
+        dict['index'] = "wikipedia-index2"
 
         dict['analyzers'] = [{'method': "ngram-word",
                               'ngram': 1,

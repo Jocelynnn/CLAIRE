@@ -41,7 +41,13 @@ if __name__ == '__main__':
         content = idx.metadata(d_id).get('content')
         path = idx.metadata(d_id).get('path')
         # print(content)
-        f_content = "{}.{}...\n".format(num + 1,content[0:50])
+        if content != None:
+            f_content = "{}.{}...\n".format(num + 1,content[0:50])
+        else:
+            content = "EMPTY"
+
+        if path != None:
+            print(path)
         response['results'].append({
             'score': float(score),
             'content': content[0:100],
