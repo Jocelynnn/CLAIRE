@@ -352,7 +352,7 @@ def get_filled_form(ranker):
     return curt_form
 
 
-def generate_search_config(ranker,is_server = True):
+def generate_search_config(ranker,is_server=True):
     if is_server:
         dict = {}
         dict['stop-words'] = "data/lemur-stopwords.txt"
@@ -374,8 +374,6 @@ def generate_search_config(ranker,is_server = True):
             if key.startswith('p_'):
                 dict['ranker'][key[2:]] = round(float(value), 4)
                 config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
-
-
     else:
         dict = {}
         dict['stop-words'] = "data/lemur-stopwords.txt"
