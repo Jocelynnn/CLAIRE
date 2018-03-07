@@ -71,11 +71,14 @@
                         {% for obj in response.results %}
                             <tr>
                                 <td>
-{#                                    <button class="btn btn-default btn-sm">{{ obj.path}}</button>#}
+                                    {#                                    <button class="btn btn-default btn-sm">{{ obj.path}}</button>#}
                                     {{ obj.content }}
                                 </td>
                                 <td>
                                     {{ obj.score }}
+                                </td>
+                                <td>
+                                    <a href="{{ obj.path_link }}">{{ obj.path_title }}</a>
                                 </td>
                             </tr>
                         {% endfor %}
