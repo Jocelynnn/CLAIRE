@@ -46,11 +46,11 @@ if __name__ == '__main__':
         else:
             content = "EMPTY"
 
-        if path != None:
-            print(path)
-        else:
-            path = ""
-            
+        # if path != None:
+        #     print(path)
+        # else:
+        #     path = ""
+
         response['results'].append({
             'score': float(score),
             'content': content[0:100],
