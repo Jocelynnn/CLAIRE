@@ -15,7 +15,7 @@
                     <th rowspan="2">Parameters</th>
                     <th colspan="2">Apnews</th>
                     <th colspan="2">Cranfield</th>
-                    <th colspan="2">Trec</th>
+                    {#                    <th colspan="2">Trec</th>#}
 
                     {#      TODO                      if no ndcg#}
 
@@ -27,11 +27,11 @@
                 </tr>
                 <tr>
                     <th scope="col">map</th>
-                    <th scope="col">NDCG</th>
+                    <th scope="col">NDCG@10</th>
                     <th scope="col">map</th>
-                    <th scope="col">NDCG</th>
-                    <th scope="col">map</th>
-                    <th scope="col">NDCG</th>
+                    <th scope="col">NDCG@10</th>
+                    {#                    <th scope="col">map</th>#}
+                    {#                    <th scope="col">NDCG</th>#}
                 </tr>
                 </thead>
                 <tbody>
@@ -62,7 +62,8 @@
                             </form>
                         </td>
 
-                        {% with my_array='apnews cranfield trec' %}
+                        {% with my_array='apnews cranfield' %}
+                            {#                            {% with my_array='apnews cranfield trec' %}#}
                             {% for item in my_array.split %}
                                 {#                        list all evaluations #}
                                 {% if perfs_dict %}
@@ -99,7 +100,7 @@
 
                         <td>
                             <button class="btn btn-primary btn-sm" type="submit">
-                                <a href="{% url  'create_search_engine' ranker.id%}"
+                                <a href="{% url  'create_search_engine' ranker.id %}"
                                    style="color: white; text-decoration: none;">Create Search
                                     Engine</a>
                             </button>
