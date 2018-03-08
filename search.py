@@ -57,7 +57,7 @@ if __name__ == '__main__':
             'score': float(score),
             'content': content[0:100],
             'path_link': 'https://en.wikipedia.org/wiki/'+path,
-            'path_title': str(path).replace('/_/g', ' ')
+            'path_title': path_title
         })
     response['elapsed_time'] = time.time() - start
     print(json.dumps(response, indent=2))

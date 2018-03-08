@@ -81,6 +81,9 @@ class Own_retrieval(RetrievalMethod):
     ranker_id = models.CharField(max_length=70, default='CustomizedRanker')
     ranker_id_4_config = models.CharField(max_length=70, default='customzied-ranker')
 
+    def __str__(self):
+        return "Customized retrieval function"
+
 class Peformance(models.Model):
     ranker = models.ForeignKey(RetrievalMethod, on_delete=models.CASCADE)
     dataset = models.CharField(max_length=30)
