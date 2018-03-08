@@ -73,82 +73,69 @@
 
 
             <div class="row">
-                <div class="col-md-6">
-                    {% if response1 %}
-                        <div class="col-md-6">
-                            <div class="col-md-8">
-                                <table class="table table-bordered table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>Document</th>
-                                        <th>Score</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for obj in response1.results %}
-                                        <tr>
-                                            {% if obj.path_title %}
-                                                <td>
-                                                    <a href="{{ obj.path_link }}"
-                                                       target="_blank">{{ obj.path_title }}</a>
-                                                </td>
-                                            {% else %}
-                                                <td>
-                                                    {#                                    <button class="btn btn-default btn-sm">{{ obj.path}}</button>#}
-                                                    {{ obj.content }}
-                                                </td>
-                                            {% endif %}
-                                            <td>
-                                                {{ obj.score }}
-                                            </td>
+                <div class="col-md-12">
 
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    {% if response1 and response2 %}
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ ranker1 }}</th>
+                                <th>Score</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in response1.results %}
+                                <tr>
+                                    {% if obj.path_title %}
+                                        <td>
+                                            <a href="{{ obj.path_link }}"
+                                               target="_blank">{{ obj.path_title }}</a>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            {{ obj.content }}
+                                        </td>
+                                    {% endif %}
+                                    <td>
+                                        {{ obj.score }}
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ ranker2 }}</th>
+                                <th>Score</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for obj in response2.results %}
+                                <tr>
+                                    {% if obj.path_title %}
+                                        <td>
+                                            <a href="{{ obj.path_link }}"
+                                               target="_blank">{{ obj.path_title }}</a>
+                                        </td>
+                                    {% else %}
+                                        <td>
+                                            {{ obj.content }}
+                                        </td>
+                                    {% endif %}
+                                    <td>
+                                        {{ obj.score }}
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     {% endif %}
                 </div>
-
-                <div class="col-md-6">
-                    {% if response1 %}
-                        <div class="col-md-6">
-                            <div class="col-md-8">
-                                <table class="table table-bordered table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th>Document</th>
-                                        <th>Score</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for obj in response1.results %}
-                                        <tr>
-                                            {% if obj.path_title %}
-                                                <td>
-                                                    <a href="{{ obj.path_link }}"
-                                                       target="_blank">{{ obj.path_title }}</a>
-                                                </td>
-                                            {% else %}
-                                                <td>
-                                                    {#                                    <button class="btn btn-default btn-sm">{{ obj.path}}</button>#}
-                                                    {{ obj.content }}
-                                                </td>
-                                            {% endif %}
-                                            <td>
-                                                {{ obj.score }}
-                                            </td>
-
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-
             </div>
 
     </main>
