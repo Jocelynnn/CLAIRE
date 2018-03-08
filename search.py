@@ -39,7 +39,9 @@ if __name__ == '__main__':
 
     for num, (d_id, score) in enumerate(top_docs):
         content = idx.metadata(d_id).get('content')
-        path = idx.metadata(d_id).get('path')
+        path = str(idx.metadata(d_id).get('path'))
+        path_title = path.replace('/_/g', ' ')
+        path_title = path_title[0:20]
         # print(content)
         if content != None:
             f_content = "{}.{}...\n".format(num + 1,content[0:50])
@@ -54,7 +56,7 @@ if __name__ == '__main__':
         response['results'].append({
             'score': float(score),
             'content': content[0:100],
-            'path_link': 'https://en.wikipedia.org/wiki/'+str(path),
+            'path_link': 'https://en.wikipedia.org/wiki/'+path,
             'path_title': str(path).replace('/_/g', ' ')
         })
     response['elapsed_time'] = time.time() - start

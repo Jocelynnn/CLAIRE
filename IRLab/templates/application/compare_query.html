@@ -81,7 +81,9 @@
                             <thead>
                             <tr>
                                 <th>{{ ranker1 }}</th>
-                                <th>Score</th>
+{#                                <th>Score</th>#}
+                                <th>{{ ranker1 }}</th>
+{#                                <th>Score</th>#}
 
                             </tr>
                             </thead>
@@ -98,9 +100,9 @@
                                             {{ obj1.content }}
                                         </td>
                                     {% endif %}
-                                    <td>
-                                        {{ obj1.score }}
-                                    </td>
+{#                                    <td>#}
+{#                                        {{ obj1.score }}#}
+{#                                    </td>#}
 
                                 {% if obj2.path_title %}
                                         <td>
@@ -112,9 +114,9 @@
                                             {{ obj2.content }}
                                         </td>
                                     {% endif %}
-                                    <td>
-                                        {{ obj2.score }}
-                                    </td>
+{#                                    <td>#}
+{#                                        {{ obj2.score }}#}
+{#                                    </td>#}
 
                                 </tr>
                             {% endfor %}
