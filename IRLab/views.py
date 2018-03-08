@@ -246,11 +246,13 @@ def compare_query(request):
             # query submitted
             ranker1 = RetrievalMethod.objects.get(id=request.POST.get('ranker1_id', None))
             ranker2 = RetrievalMethod.objects.get(id=request.POST.get('ranker2_id', None))
-            reponse1 = search_helper(ranker1, query)
-            reponse2 = search_helper(ranker2, query)
-            context = {'ranker_list': rankers, 'ranker1': ranker1, 'ranker2': ranker2, 'response1': reponse1,
-                       'response2': reponse2}
-    #         initial render
+            response1 = search_helper(ranker1, query)
+            response2 = search_helper(ranker2, query)
+            zipped_response = zip(response1.results, response2.results)
+            context = {'ranker_list': rankers, 'ranker1': ranker1, 'ranker2': ranker2,
+                       'zipped_response': zipped_response,
+                       }
+    # initial render
     else:
         context = {'ranker_list': rankers}
     return render(request, 'application/compare_query.html', context)

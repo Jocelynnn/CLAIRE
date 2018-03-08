@@ -44,8 +44,6 @@ INSTALLED_APPS = [
     'codemirror2',
     'chartit',
     'graphos',
-    'multiforloop'
-
 ]
 
 MIDDLEWARE = [

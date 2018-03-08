@@ -76,7 +76,7 @@
             <div class="row">
                 <div class="col-md-12">
 
-                    {% if response1 and response2 %}
+                    {% if zipped_response%}
                         <table class="table table-bordered table-hover">
                             <thead>
                             <tr>
@@ -86,8 +86,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% load multifor %}
-                            {% for obj1 in response1.results;obj2 in response2.results %}
+                            {% for obj1,obj2 in zipped_response%}
                                 <tr>
                                     {% if obj1.path_title %}
                                         <td>
