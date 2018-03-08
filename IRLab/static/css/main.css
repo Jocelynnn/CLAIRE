@@ -14,7 +14,7 @@ body {
 
 .sidebar {
   position: fixed;
-  top: 0;
+  top: 50px;
   bottom: 0;
   left: 0;
   z-index: 100; /* Behind the navbar */
@@ -125,3 +125,9 @@ body {
   border-top-right-radius: 0;
 }
 
+
+
+.mx-auto.search-panel {
+  padding-top: 20px;
+
+}

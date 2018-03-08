@@ -19,7 +19,6 @@ from graphos.renderers.gchart import LineChart
 import subprocess
 
 
-
 # Create your views here.
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
@@ -150,7 +149,6 @@ def create_search_engine(request, id):
                   {'ranker_name': ranker.name, 'id': id, 'ranker_id': ranker.ranker_id})
 
 
-
 @login_required
 def show_perfs(request):
     rankers = RetrievalMethod.objects.filter(author=request.user)
@@ -161,6 +159,7 @@ def show_perfs(request):
     RequestConfig(request).configure(table1)
     RequestConfig(request).configure(table2)
     return render(request, 'evaluation/myperfs.html', {'table1': table1, 'table2': table2})
+
 
 @login_required
 def show_perfs_analysis(request):
@@ -213,7 +212,6 @@ def show_perfs_analysis(request):
         for pair in param_map:
             data.append([pair[0], pair[1]])
 
-
     # DataSource object
     data_source = SimpleDataSource(data=data)
     # Chart object
@@ -234,46 +232,74 @@ def show_perfs_analysis(request):
 
     return render(request, 'application/charts.html', context)
 
+
+def compare_query(request):
+    rankers = RetrievalMethod.objects.filter(author=request.user)
+    if request.method == 'POST':
+        # before submit query:
+        query = request.POST.get('query_text', None)
+        if query is None:
+            ranker1 = RetrievalMethod.objects.get(id=request.POST.get('ranker-1', None))
+            ranker2 = RetrievalMethod.objects.get(id=request.POST.get('ranker-2', None))
+            context = {'ranker_list': rankers, 'ranker1': ranker1, 'ranker2': ranker2}
+        else:
+            # query submitted
+            ranker1 = RetrievalMethod.objects.get(id=request.POST.get('ranker1_id', None))
+            ranker2 = RetrievalMethod.objects.get(id=request.POST.get('ranker2_id', None))
+            reponse1 = search_helper(ranker1, query)
+            reponse2 = search_helper(ranker2, query)
+            context = {'ranker_list': rankers, 'ranker1': ranker1, 'ranker2': ranker2, 'response1': reponse1,
+                       'response2': reponse2}
+    #         initial render
+    else:
+        context = {'ranker_list': rankers}
+    return render(request, 'application/compare_query.html', context)
+
+
 def search(request):
     if request.method == 'POST':
         ranker = RetrievalMethod.objects.get(id=request.POST.get('id', None))
         query = request.POST.get('query_text', None)
-        # print(query)
-        ranker_id = ranker.ranker_id
-        # print(ranker_id)
 
-        # proc = subprocess.Popen('pwd', stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-        #                         shell=True)
-        # output = proc.communicate()[0].decode('utf-8')
-        # print(output)
-
-        if ranker_id == 'CustomizedRanker':
-            run_script = 'search_customized.py '
-
-            with open(ranker.file_location) as target_ranker, \
-                    open('search_customized.py', 'w') as target_script, \
-                    open('search.py', 'r') as fin:
-                base = fin.read()
-                base = base.replace("ranker = getattr(metapy.index, ranker_id)(**params)", "ranker = MyRanker()")
-                target_script.write(target_ranker.read() + '\n')
-                target_script.write(base)
-        else:
-            run_script = 'search.py '
-
-        config_file, config_params = generate_search_config(ranker)
-        # "python3 searcher.py config.toml "
-        commands = "python3 " + run_script + config_file + " '" + query + "' " + ranker_id + " '" + config_params + "' "
-        print(commands)
-        proc = subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                shell=True)
-        output = proc.communicate()[0].decode('utf-8')
-        # print(output)
-
-        response = json.loads(output)
-
+        response = search_helper(ranker, query)
         return render(request, 'application/demo.html',
                       {'ranker_name': ranker.name, 'response': response, 'id': ranker.id,
                        'ranker_id': ranker.ranker_id})
+
+
+def search_helper(ranker, query):
+    # print(query)
+    ranker_id = ranker.ranker_id
+    # print(ranker_id)
+
+    # proc = subprocess.Popen('pwd', stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+    #                         shell=True)
+    # output = proc.communicate()[0].decode('utf-8')
+    # print(output)
+
+    if ranker_id == 'CustomizedRanker':
+        run_script = 'search_customized.py '
+
+        with open(ranker.file_location) as target_ranker, \
+                open('search_customized.py', 'w') as target_script, \
+                open('search.py', 'r') as fin:
+            base = fin.read()
+            base = base.replace("ranker = getattr(metapy.index, ranker_id)(**params)", "ranker = MyRanker()")
+            target_script.write(target_ranker.read() + '\n')
+            target_script.write(base)
+    else:
+        run_script = 'search.py '
+
+    config_file, config_params = generate_search_config(ranker)
+    # "python3 searcher.py config.toml "
+    commands = "python3 " + run_script + config_file + " '" + query + "' " + ranker_id + " '" + config_params + "' "
+    print(commands)
+    proc = subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            shell=True)
+    output = proc.communicate()[0].decode('utf-8')
+    # print(output)
+    response = json.loads(output)
+    return response
 
 
 def evaluate(request, id):
@@ -352,7 +378,7 @@ def get_filled_form(ranker):
     return curt_form
 
 
-def generate_search_config(ranker,is_server=True):
+def generate_search_config(ranker, is_server=True):
     if is_server:
         dict = {}
         dict['stop-words'] = "data/lemur-stopwords.txt"
@@ -397,16 +423,16 @@ def generate_search_config(ranker,is_server=True):
                 dict['ranker'][key[2:]] = round(float(value), 4)
                 config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
 
-        # while True:
-        #     _num = random.randint(1, 10000)
-        #     file_name = 'c-'+str(_num) + '.toml'
-        #     base_dir = os.path.abspath(settings.BASE_DIR)
-        #     file_path = os.path.join(base_dir, file_name)
-        #     my_file = Path(file_path)
-        #     if not my_file.is_file():
-        #         with open(my_file, 'w+') as fout:
-        #             pytoml.dump(fout, dict)
-        #             break
+                # while True:
+                #     _num = random.randint(1, 10000)
+                #     file_name = 'c-'+str(_num) + '.toml'
+                #     base_dir = os.path.abspath(settings.BASE_DIR)
+                #     file_path = os.path.join(base_dir, file_name)
+                #     my_file = Path(file_path)
+                #     if not my_file.is_file():
+                #         with open(my_file, 'w+') as fout:
+                #             pytoml.dump(fout, dict)
+                #             break
     file_name = 'temp.toml'
     with open(file_name, 'w+') as fout:
         pytoml.dump(fout, dict)

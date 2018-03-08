@@ -13,7 +13,6 @@
         <br>
 
         <div class="row">
-            {#            <div class="col-md-2"></div>#}
             <div class="mx-auto" style="width: 850px;">
                 <div class="input-group">
                     <div class="input-group-btn search-panel">
@@ -22,14 +21,6 @@
                             <span id="search_concept">{{ ranker_name }}</span>
                             <span class="caret"></span>
                         </button>
-                        {#                        <div class="dropdown-menu">#}
-                        {#                            <h6 class="dropdown-header">Ranking function</h6>#}
-                        {#                            <a id="OkapiBM25" class="dropdown-item">Okapi BM25</a>#}
-                        {#                            <a id="PivotedLength" class="dropdown-item">Pivoted Length Normalization</a>#}
-                        {#                            <a id="DirichletPrior" class="dropdown-item">Dirichlet Prior Smoothing</a>#}
-                        {#                            <a id="JelinekMercer" class="dropdown-item">Jelinek-Mercer Smoothing</a>#}
-                        {#                            <a id="AbsoluteDiscount" class="dropdown-item">Absolute Discount Smoothing</a>#}
-                        {#                        </div>#}
                     </div>
                     <form class="form-inline" action="{% url 'search' %}" method="post">
                         {% csrf_token %}
@@ -45,13 +36,6 @@
         </div>
 
         <div class="row">
-
-            {#                    <ul>#}
-            {#                        {% for obj in response.results %}#}
-            {#                            <li><a href="#">{{ obj.name }} - {{ obj.score }}</a></li>#}
-            {#                        {% endfor %}#}
-            {#                    </ul>#}
-
             {% if response %}
                 <div class="col-md-2"></div>
                 <div class="col-md-8">

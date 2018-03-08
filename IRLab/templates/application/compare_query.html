@@ -1,0 +1,157 @@
+{% extends "application/analysis_base.html" %}
+
+
+{% block analysis %}
+
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
+
+        {#        <div class="text-center">#}
+        {#            <h1>Select two retrieval functions</h1>#}
+        {#        </div>#}
+
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-4">
+                    <h3 class="text-primary">Select two retrieval functions</h3>
+                </div>
+            </div>
+
+
+            <form method="post" action="{% url 'compare_query' %}">
+                <div class="row">
+                    <div class="mx-auto" style="width: 850px;">
+
+                        {% csrf_token %}
+
+                        <select name="ranker-1">
+                            <option class="dropdown-item" selected="selected" disabled>Select from your Retrival
+                                Function
+                            </option>
+
+                            {% for ranker in ranker_list %}
+                                <option value="{{ ranker.id }}" {% if ranker1 and ranker1.id == ranker.id %}
+                                        selected="selected" {% endif %}>{{ ranker }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <select name="ranker-2">
+                            <option class="dropdown-item" selected="selected" disabled>Select from your Retrival
+                                Function
+                            </option>
+
+                            {% for ranker in ranker_list %}
+                                <option value="{{ ranker.id }}"{% if ranker2 and ranker2.id == ranker.id %}
+                                        selected="selected" {% endif %}>{{ ranker }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button class="btn btn-outline-primary" type="submit">Compare</button>
+                    </div>
+                </div>
+            </form>
+
+            {% if ranker1 and ranker2 %}
+                <div class="row">
+                    <div class="mx-auto" style="width: 850px;">
+                        <div class="input-group">
+                            <form class="form-inline" action="{% url 'compare_query' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="ranker1_id" value="{{ ranker1.id }}">
+                                <input type="hidden" name="ranker2_id" value="{{ ranker2.id }}">
+                                <input type="text" class="form-control" placeholder="Enter a query..." name="query_text"
+                                       style="width: 600px;">
+                                <button class="btn btn-outline-primary" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    {% if response1 %}
+                        <div class="col-md-6">
+                            <div class="col-md-8">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Document</th>
+                                        <th>Score</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for obj in response1.results %}
+                                        <tr>
+                                            {% if obj.path_title %}
+                                                <td>
+                                                    <a href="{{ obj.path_link }}"
+                                                       target="_blank">{{ obj.path_title }}</a>
+                                                </td>
+                                            {% else %}
+                                                <td>
+                                                    {#                                    <button class="btn btn-default btn-sm">{{ obj.path}}</button>#}
+                                                    {{ obj.content }}
+                                                </td>
+                                            {% endif %}
+                                            <td>
+                                                {{ obj.score }}
+                                            </td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    {% if response1 %}
+                        <div class="col-md-6">
+                            <div class="col-md-8">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th>Document</th>
+                                        <th>Score</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for obj in response1.results %}
+                                        <tr>
+                                            {% if obj.path_title %}
+                                                <td>
+                                                    <a href="{{ obj.path_link }}"
+                                                       target="_blank">{{ obj.path_title }}</a>
+                                                </td>
+                                            {% else %}
+                                                <td>
+                                                    {#                                    <button class="btn btn-default btn-sm">{{ obj.path}}</button>#}
+                                                    {{ obj.content }}
+                                                </td>
+                                            {% endif %}
+                                            <td>
+                                                {{ obj.score }}
+                                            </td>
+
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+    </main>
+
+
+{% endblock %}

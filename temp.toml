@@ -1,15 +1,12 @@
 stop-words = "data/lemur-stopwords.txt"
 prefix = "."
-dataset = "apnews"
+dataset = "wikipedia"
 corpus = "line.toml"
-index = "apnews-index"
-query-judgements = "qrels.txt"
+index = "wikipedia-index2"
 
 [ranker]
-method = "bm25"
-k1 = 1.19999999999999996
-b = 0.75000000000000000
-k3 = 500.00000000000000000
+method = "dirichlet-prior"
+mu = 2000.00000000000000000
 
 [[analyzers]]
 method = "ngram-word"

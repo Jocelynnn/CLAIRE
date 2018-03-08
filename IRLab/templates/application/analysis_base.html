@@ -1,0 +1,41 @@
+{% extends "home/base.html" %}
+
+
+{% block content %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-lg-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'show_retrievals' %}">
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'perf_analysis' %}">
+                                <span data-feather="bar-chart-2"></span>
+                                MAP-Param Plots
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'compare_query' %}">
+                                <span data-feather="activity"></span>
+                                Query Comparison
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+
+     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+        feather.replace()
+    </script>
+
+    {% block analysis %}
+    {% endblock %}
+{% endblock %}

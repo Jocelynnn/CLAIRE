@@ -26,12 +26,18 @@ class Okapi_bm25(RetrievalMethod):
     # query term smoothing
     p_k3 = models.FloatField()
 
+    def __str__(self):
+        return "{} ({}={}, {}={}, {}={})".format(self.name,'k1',self.p_k1,'b',self.p_b,'k3',self.p_k3)
+
 
 class Jelinek_mercer(RetrievalMethod):
     # https://meta-toolkit.org/doxygen/classmeta_1_1index_1_1jelinek__mercer.html
     p_lambda = models.FloatField()
     ranker_id = models.CharField(max_length=70, default='JelinekMercer')
     ranker_id_4_config = models.CharField(max_length=70, default='jelinek-mercer')
+
+    def __str__(self):
+        return "{} ({}={})".format(self.name,'lambda',self.p_lambda)
 
 
 class Dirichlet_prior(RetrievalMethod):
@@ -40,12 +46,20 @@ class Dirichlet_prior(RetrievalMethod):
     ranker_id = models.CharField(max_length=70, default='DirichletPrior')
     ranker_id_4_config = models.CharField(max_length=70, default='dirichlet-prior')
 
+    def __str__(self):
+        return "{} ({}={})".format(self.name,'mu',self.p_mu)
+
 
 class Pivoted_length(RetrievalMethod):
     # https://meta-toolkit.org/doxygen/classmeta_1_1index_1_1pivoted__length.html
     p_s = models.FloatField()
     ranker_id = models.CharField(max_length=70, default='PivotedLength')
     ranker_id_4_config = models.CharField(max_length=70, default='pivoted-length')
+
+    def __str__(self):
+        return "{} ({}={})".format(self.name,'s',self.p_s)
+
+
 
 
 
@@ -54,6 +68,10 @@ class Absolute_discount(RetrievalMethod):
     p_delta = models.FloatField()
     ranker_id = models.CharField(max_length=70, default='AbsoluteDiscount')
     ranker_id_4_config = models.CharField(max_length=70, default='absolute-discount')
+
+    def __str__(self):
+        return "{} ({}={})".format(self.name,'delta',self.p_delta)
+
 
 
 
