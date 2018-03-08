@@ -1,6 +1,7 @@
 {% extends "application/analysis_base.html" %}
 
 
+
 {% block analysis %}
 
     <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
@@ -85,49 +86,35 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for obj in response1.results %}
+                            {% load multifor %}
+                            {% for obj1 in response1.results;obj2 in response2.results %}
                                 <tr>
-                                    {% if obj.path_title %}
+                                    {% if obj1.path_title %}
                                         <td>
-                                            <a href="{{ obj.path_link }}"
-                                               target="_blank">{{ obj.path_title }}</a>
+                                            <a href="{{ obj1.path_link }}"
+                                               target="_blank">{{ obj1.path_title }}</a>
                                         </td>
                                     {% else %}
                                         <td>
-                                            {{ obj.content }}
+                                            {{ obj1.content }}
                                         </td>
                                     {% endif %}
                                     <td>
-                                        {{ obj.score }}
+                                        {{ obj1.score }}
                                     </td>
 
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered table-hover">
-                            <thead>
-                            <tr>
-                                <th>{{ ranker2 }}</th>
-                                <th>Score</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for obj in response2.results %}
-                                <tr>
-                                    {% if obj.path_title %}
+                                {% if obj2.path_title %}
                                         <td>
-                                            <a href="{{ obj.path_link }}"
-                                               target="_blank">{{ obj.path_title }}</a>
+                                            <a href="{{ obj2.path_link }}"
+                                               target="_blank">{{ obj2.path_title }}</a>
                                         </td>
                                     {% else %}
                                         <td>
-                                            {{ obj.content }}
+                                            {{ obj2.content }}
                                         </td>
                                     {% endif %}
                                     <td>
-                                        {{ obj.score }}
+                                        {{ obj2.score }}
                                     </td>
 
                                 </tr>

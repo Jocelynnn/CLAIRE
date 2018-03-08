@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'froala_editor',
     'codemirror2',
     'chartit',
-    'graphos'
+    'graphos',
+    'multiforloop'
 
 ]
 
