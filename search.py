@@ -4,9 +4,8 @@ import metapy
 import sys
 import math
 
-
 if __name__ == '__main__':
-    if len(sys.argv) != 5 :
+    if len(sys.argv) != 5:
         print("Usage: python {} config.toml query ranker_id params".format(sys.argv[0]))
         sys.exit(1)
 
@@ -41,10 +40,10 @@ if __name__ == '__main__':
         content = idx.metadata(d_id).get('content')
         path = str(idx.metadata(d_id).get('path'))
         path_title = path.replace('/_/g', ' ')
-        path_title = path_title[0:20]
+        path_title = path_title[0:min(50, len(path_title))]
         # print(content)
         if content != None:
-            f_content = "{}.{}...\n".format(num + 1,content[0:50])
+            f_content = "{}.{}...\n".format(num + 1, content[0:50])
         else:
             content = "EMPTY"
 
@@ -56,7 +55,7 @@ if __name__ == '__main__':
         response['results'].append({
             'score': float(score),
             'content': content[0:100],
-            'path_link': 'https://en.wikipedia.org/wiki/'+path,
+            'path_link': 'https://en.wikipedia.org/wiki/' + path,
             'path_title': path_title
         })
     response['elapsed_time'] = time.time() - start
