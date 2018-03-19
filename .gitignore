@@ -12,4 +12,5 @@ db.sqlite3
 /IRLab/search-config.toml
 apnews*
 cranfield*
-
+gitlab_private_token.py
+virtual_env/

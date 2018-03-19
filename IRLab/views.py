@@ -17,7 +17,10 @@ from pathlib import Path
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart
 import subprocess
+import requests
+import gitlab_private_token
 
+GITLAB_PROJECT_URL_BASE = "https://gitlab.textdata.org/api/v4/projects?private_token={0}&name={1}"
 
 # Create your views here.
 def post_list(request):
@@ -303,6 +306,13 @@ def search_helper(ranker, query):
     response = json.loads(output)
     return response
 
+def get_gitlab_project_url(private_token, project_name):
+    '''
+    :param private_token: the private token associated with the gitlab account.
+    :param project_name: the desired name of the new project.
+    :return: a formatted string for the post request to create the GitLab project.
+    '''
+    return GITLAB_PROJECT_URL_BASE.format(private_token, project_name)
 
 def evaluate(request, id):
     '''
@@ -312,6 +322,11 @@ def evaluate(request, id):
     :param dataset: dataset to evaluate on
     :return:
     '''
+    gitlab_project_url = get_gitlab_project_url(gitlab_private_token.GITLAB_PRIVATE_TOKEN, "TestProject")
+    resp = requests.post(gitlab_project_url)
+    if resp.status_code != 201:
+        print('Error creating gitlab repository.')
+
     ranker = RetrievalMethod.objects.get(id=id)
     ranker_id = ranker.ranker_id
 
