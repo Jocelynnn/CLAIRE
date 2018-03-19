@@ -19,8 +19,7 @@ from graphos.renderers.gchart import LineChart
 import subprocess
 import requests
 import gitlab_private_token
-
-GITLAB_PROJECT_URL_BASE = "https://gitlab.textdata.org/api/v4/projects?private_token={0}&name={1}"
+import gitlab_util
 
 # Create your views here.
 def post_list(request):
@@ -306,14 +305,6 @@ def search_helper(ranker, query):
     response = json.loads(output)
     return response
 
-def get_gitlab_project_url(private_token, project_name):
-    '''
-    :param private_token: the private token associated with the gitlab account.
-    :param project_name: the desired name of the new project.
-    :return: a formatted string for the post request to create the GitLab project.
-    '''
-    return GITLAB_PROJECT_URL_BASE.format(private_token, project_name)
-
 def evaluate(request, id):
     '''
 
@@ -322,10 +313,25 @@ def evaluate(request, id):
     :param dataset: dataset to evaluate on
     :return:
     '''
-    gitlab_project_url = get_gitlab_project_url(gitlab_private_token.GITLAB_PRIVATE_TOKEN, "TestProject")
-    resp = requests.post(gitlab_project_url)
-    if resp.status_code != 201:
-        print('Error creating gitlab repository.')
+    TEST_PROJECT_NAME = "TestProject"
+    TEST_FILE_NAME = "test.py"
+
+    # Create the new project.
+    project_creation_response_code = gitlab_util.create_new_project(TEST_PROJECT_NAME)
+    if project_creation_response_code != 201:
+        print('Failed to create gitlab project. Abandoning evaluation.')
+        return redirect('show_retrievals')
+
+    # Get the id of the new project. This is necessary for committing files.
+    new_project_id = gitlab_util.get_new_project_id(TEST_PROJECT_NAME)
+    if new_project_id is None:
+        print('Failed to get new project id. Abandoning evaluation.')
+        return redirect('show_retrievals')
+
+    # Commit files to the new project.
+    commit_response = gitlab_util.commit_evaluation_files(new_project_id)
+    if commit_response is None:
+        print('Failed to commit all files. Abandoning evaluation.')
 
     ranker = RetrievalMethod.objects.get(id=id)
     ranker_id = ranker.ranker_id
@@ -333,7 +339,7 @@ def evaluate(request, id):
     dataset = request.POST.get('dataset', 'cranfield')
 
     if ranker_id == 'CustomizedRanker':
-        run_script = 'eval_customized.py '
+        run_script = 'eval_customized.py'
         with open(ranker.file_location) as target_ranker, \
                 open('eval_customized.py', 'w') as target_script, \
                 open('eval.py', 'r') as fin:
