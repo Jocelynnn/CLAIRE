@@ -6,6 +6,7 @@ GITLAB_FILES_URL = "https://gitlab.textdata.org/api/v4/projects/{0}/repository/f
 GITLAB_COMMITS_URL = "https://gitlab.textdata.org/api/v4/projects/{0}/repository/commits"
 
 def create_new_project(project_name):
+    print("Creating GitLab project with name ", project_name)
     payload = { "private_token": gitlab_private_token.GITLAB_PRIVATE_TOKEN, "name": project_name }
     resp = requests.post(GITLAB_PROJECTS_URL, data=payload)
 
@@ -26,13 +27,9 @@ def get_new_project_id(project_name):
     # this is cautionary in case there are multiple projects with the same name.
     return resp.json()[0]["id"]
 
-def commit_evaluation_files(project_id):
-    filenames = ['eval.py', 'eval_customized.py']
-
-    for filename in filenames:
-        contents = open(filename).read()
-        commit_response = commit_file(project_id, filename, contents)
-
+def commit_evaluation_files(project_id, commit_files, files_contents):
+    for i in range(len(commit_files)):
+        commit_response = commit_file(project_id, commit_files[i], files_contents[i])
         if commit_response != 201:
             return None
 

@@ -20,6 +20,10 @@ import subprocess
 import requests
 import gitlab_private_token
 import gitlab_util
+import string
+import pickle
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 def post_list(request):
@@ -305,35 +309,21 @@ def search_helper(ranker, query):
     response = json.loads(output)
     return response
 
-def evaluate(request, id):
+def evaluate(request, db_ranker_id):
     '''
 
     :param request:
-    :param id: ranker id in db
+    :param db_ranker_id: ranker id in db
     :param dataset: dataset to evaluate on
     :return:
     '''
-    TEST_PROJECT_NAME = "TestProject"
-    TEST_FILE_NAME = "test.py"
 
-    # Create the new project.
-    project_creation_response_code = gitlab_util.create_new_project(TEST_PROJECT_NAME)
-    if project_creation_response_code != 201:
-        print('Failed to create gitlab project. Abandoning evaluation.')
-        return redirect('show_retrievals')
+    # setup vars for GitLab project creation
+    PROJECT_NAME_LENGTH = 10
+    RANDOM_PROJECT_NAME = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(PROJECT_NAME_LENGTH))
 
-    # Get the id of the new project. This is necessary for committing files.
-    new_project_id = gitlab_util.get_new_project_id(TEST_PROJECT_NAME)
-    if new_project_id is None:
-        print('Failed to get new project id. Abandoning evaluation.')
-        return redirect('show_retrievals')
-
-    # Commit files to the new project.
-    commit_response = gitlab_util.commit_evaluation_files(new_project_id)
-    if commit_response is None:
-        print('Failed to commit all files. Abandoning evaluation.')
-
-    ranker = RetrievalMethod.objects.get(id=id)
+    # pre-evaluation processing
+    ranker = RetrievalMethod.objects.get(id=db_ranker_id)
     ranker_id = ranker.ranker_id
 
     dataset = request.POST.get('dataset', 'cranfield')
@@ -348,26 +338,67 @@ def evaluate(request, id):
             target_script.write(target_ranker.read() + '\n')
             target_script.write(base)
     else:
-        run_script = 'eval.py '
+        run_script = 'eval.py'
 
-    # "python3 searcher.py config.toml "
+    # Create the new project on GitLab.
+    project_creation_response_code = gitlab_util.create_new_project(RANDOM_PROJECT_NAME)
+    if project_creation_response_code != 201:
+        print('Failed to create gitlab project. Abandoning evaluation.')
+        return redirect('show_retrievals')
+
+    # Get the id of the new project. This is necessary for committing files.
+    new_project_id = gitlab_util.get_new_project_id(RANDOM_PROJECT_NAME)
+    if new_project_id is None:
+        print('Failed to get new project id. Abandoning evaluation.')
+        return redirect('show_retrievals')
+
+    # Generate execution files
     config_file, config_params = generate_eval_config(ranker, dataset)
-    commands = "python3 " + run_script + config_file + " " + ranker_id + " '" + config_params + "' "
-    print(commands)
-    proc = subprocess.Popen(commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                            shell=True)
-    output = proc.communicate()[0].decode('utf-8')
+    command = "python3 " + run_script + " " + config_file + " " + ranker_id + " '" + config_params + "' "
 
-    print(output)
-    response = json.loads(output)
-    # print(response)
+    # Commit files to the new GitLab project repo for build
+    commit_files = [run_script, config_file, "execute_eval.py", "exec_config.json"]
+    files_contents = []
+    for filename in commit_files:
+        if filename == "exec_config.json":
+            exec_config = {
+                "command": command,
+                "db_ranker_id": db_ranker_id,
+                "project_name": RANDOM_PROJECT_NAME    
+            }
+            files_contents.append(json.dumps(exec_config))
+        else:
+            files_contents.append(open(filename).read())
+    commit_response = gitlab_util.commit_evaluation_files(new_project_id, commit_files, files_contents)
+    if commit_response is None:
+        print('Failed to commit all files. Abandoning evaluation.')
 
-    perf = Peformance(ranker=ranker, dataset=dataset, map=response['map'],
-                      ndcg=response['ndcg'], elapsed_time=response['elapsed_time'])
-    perf.save()
+    # Remove this. This is only for testing the script and saving.
+    with open("exec_config.json", "w") as exec_config_file:
+        exec_config_file.write(json.dumps(exec_config))
+        exec_config_file.close()
+    os.system("python3 execute_eval.py http://127.0.0.1:8000/evaluations/evaluation_results/")
 
     return redirect('show_retrievals')
 
+@csrf_exempt
+def evaluation_results(request):
+    '''
+    Endpoint for receiving the evaluation results from the GitLab execution script.
+    '''
+    evaluation_reponse = json.loads(request.body)
+    print("Evaluation Results: ", json.dumps(evaluation_reponse))
+   
+    # Saving is done here.
+    ranker = RetrievalMethod.objects.get(id=evaluation_reponse["db_ranker_id"])
+    dataset = evaluation_reponse["dataset"]
+
+    perf = Peformance(ranker=ranker, dataset=dataset, map=evaluation_reponse['map'], 
+        ndcg=evaluation_reponse['ndcg'], elapsed_time=evaluation_reponse['elapsed_time'])
+
+    perf.save()
+
+    return HttpResponse(status=200)
 
 def get_empty_form(ranker_name):
     if ranker_name == 'Okapi BM25':
