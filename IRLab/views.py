@@ -347,7 +347,7 @@ def evaluate(request, db_ranker_id):
         return redirect('show_retrievals')
 
     # Get the id of the new project. This is necessary for committing files.
-    new_project_id = gitlab_util.get_new_project_id(RANDOM_PROJECT_NAME)
+    new_project_id = gitlab_util.get_newest_project_id_by_name(RANDOM_PROJECT_NAME)
     if new_project_id is None:
         print('Failed to get new project id. Abandoning evaluation.')
         return redirect('show_retrievals')
@@ -386,17 +386,25 @@ def evaluation_results(request):
     '''
     Endpoint for receiving the evaluation results from the GitLab execution script.
     '''
-    evaluation_reponse = json.loads(request.body)
-    print("Evaluation Results: ", json.dumps(evaluation_reponse))
+    evaluation_response = json.loads(request.body)
+    print("Evaluation Results: ", json.dumps(evaluation_response))
    
     # Saving is done here.
-    ranker = RetrievalMethod.objects.get(id=evaluation_reponse["db_ranker_id"])
-    dataset = evaluation_reponse["dataset"]
+    ranker = RetrievalMethod.objects.get(id=evaluation_response["db_ranker_id"])
+    dataset = evaluation_response["dataset"]
 
-    perf = Peformance(ranker=ranker, dataset=dataset, map=evaluation_reponse['map'], 
-        ndcg=evaluation_reponse['ndcg'], elapsed_time=evaluation_reponse['elapsed_time'])
+    perf = Peformance(ranker=ranker, dataset=dataset, map=evaluation_response['map'], 
+        ndcg=evaluation_response['ndcg'], elapsed_time=evaluation_response['elapsed_time'])
 
     perf.save()
+
+    # delete gitlab repository created for build
+    project_id = gitlab_util.get_newest_project_id_by_name(evaluation_response["project_name"])
+    headers = { "PRIVATE-TOKEN": gitlab_private_token.GITLAB_PRIVATE_TOKEN }
+    DELETE_URL = gitlab_util.GITLAB_PROJECTS_URL + "/" + str(project_id)
+    resp = requests.delete(DELETE_URL, headers=headers)
+    if resp.status_code != 202:
+        print("Error deleting GitLab repository: ", evaluation_response["project_name"])
 
     return HttpResponse(status=200)
 

@@ -15,7 +15,7 @@ def create_new_project(project_name):
     
     return resp.status_code
 
-def get_new_project_id(project_name):
+def get_newest_project_id_by_name(project_name):
     payload = { "private_token": gitlab_private_token.GITLAB_PRIVATE_TOKEN, "search": project_name, "order_by": "created_at" }
     resp = requests.get(GITLAB_PROJECTS_URL, data=payload)
 
