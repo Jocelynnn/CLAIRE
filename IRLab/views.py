@@ -357,7 +357,7 @@ def evaluate(request, db_ranker_id):
     command = "python3 " + run_script + " " + config_file + " " + ranker_id + " '" + config_params + "' "
 
     # Commit files to the new GitLab project repo for build
-    commit_files = [run_script, config_file, "execute_eval.py", "exec_config.json"]
+    commit_files = [run_script, config_file, "execute_eval.py", "exec_config.json", ".gitlab-ci.yml"]
     files_contents = []
     for filename in commit_files:
         if filename == "exec_config.json":
@@ -374,10 +374,10 @@ def evaluate(request, db_ranker_id):
         print('Failed to commit all files. Abandoning evaluation.')
 
     # Remove this. This is only for testing the script and saving.
-    with open("exec_config.json", "w") as exec_config_file:
-        exec_config_file.write(json.dumps(exec_config))
-        exec_config_file.close()
-    os.system("python3 execute_eval.py http://127.0.0.1:8000/evaluations/evaluation_results/")
+    # with open("exec_config.json", "w") as exec_config_file:
+    #     exec_config_file.write(json.dumps(exec_config))
+    #     exec_config_file.close()
+    # os.system("python3 execute_eval.py http://127.0.0.1:8000/evaluations/evaluation_results/")
 
     return redirect('show_retrievals')
 
