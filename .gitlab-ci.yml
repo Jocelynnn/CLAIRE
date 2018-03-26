@@ -19,4 +19,4 @@ before_script:
 # run the evaluation script on the user's ranking function
 evaluation:
   script:
-    - python execute_eval.py 40.71.179.177:8080/evaluations/evaluation_results/
+    - python execute_eval.py http://40.71.179.177:8080/evaluations/evaluation_results/

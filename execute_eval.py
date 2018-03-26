@@ -12,6 +12,8 @@ if __name__ == "__main__":
     proc = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                             shell=True)
     output = proc.communicate()[0].decode('utf-8')
+    print("OUTPUT: ", output)
+
     response = json.loads(output)
 
     config = json.loads(open('exec_config.json').read())
