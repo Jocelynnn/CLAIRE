@@ -5,7 +5,7 @@ from codemirror2.widgets import CodeMirrorEditor
 import os
 from django.conf import settings
 
-from .models import Okapi_bm25, Jelinek_mercer, Dirichlet_prior, Pivoted_length, Absolute_discount, Code, Own_retrieval
+from .models import Okapi_bm25, Jelinek_mercer, Dirichlet_prior, Pivoted_length, Absolute_discount, Code, Customized_retrieval
 
 
 class bm25Form(forms.ModelForm):
@@ -64,7 +64,7 @@ class CodeForm(forms.ModelForm):
 class ownRetrievalForm(forms.ModelForm):
     # read sample ranker to set default value
     class Meta:
-        model = Own_retrieval
+        model = Customized_retrieval
         fields = ('name',)
         labels = {
             'name': _('Enter the name of your retrieval function')
@@ -86,7 +86,7 @@ class ownRetrievalForm(forms.ModelForm):
 
 class ownRetrievalFormForDisplay(forms.ModelForm):
     class Meta:
-        model = Own_retrieval
+        model = Customized_retrieval
         fields = ('source',)
         labels = {
             'source':_('source code')
