@@ -1,11 +1,10 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-from froala_editor.widgets import FroalaEditor
 from codemirror2.widgets import CodeMirrorEditor
 import os
 from django.conf import settings
 
-from .models import Okapi_bm25, Jelinek_mercer, Dirichlet_prior, Pivoted_length, Absolute_discount, Code, Customized_retrieval
+from .models import Okapi_bm25, Jelinek_mercer, Dirichlet_prior, Pivoted_length, Absolute_discount, Customized_retrieval
 
 
 class bm25Form(forms.ModelForm):
@@ -53,12 +52,6 @@ class adForm(forms.ModelForm):
         labels = {
             'p_delta': _('Absolute discounting parameter '),
         }
-
-
-class CodeForm(forms.ModelForm):
-    class Meta:
-        model = Code
-        fields = ('text',)
 
 
 class ownRetrievalForm(forms.ModelForm):
