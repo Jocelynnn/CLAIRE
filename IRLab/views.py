@@ -357,7 +357,7 @@ def evaluate(request, db_ranker_id):
     command = "python3 " + run_script + " " + config_file + " " + ranker_id + " '" + config_params + "' "
 
     # Commit files to the new GitLab project repo for build
-    commit_files = [run_script, config_file, "execute_eval.py", "exec_config.json", ".gitlab-ci.yml", "lemur-stopwords.txt"]
+    commit_files = [run_script, config_file, "execute_eval.py", "exec_config.json", ".gitlab-ci.yml", "data/lemur-stopwords.txt"]
     files_contents = []
     for filename in commit_files:
         if filename == "exec_config.json":
@@ -506,7 +506,7 @@ def generate_eval_config(ranker, dataset):
     start_index = {'cranfield': 1, 'apnews': 0}
     print('dataset!!', dataset)
     dict = {}
-    dict['stop-words'] = "data/lemur-stopwords.txt"
+    dict['stop-words'] = "lemur-stopwords.txt"
     dict['prefix'] = "."
     dict['dataset'] = "/data/" + dataset
     dict['corpus'] = "line.toml"
