@@ -6,7 +6,6 @@ GITLAB_FILES_URL = "https://gitlab.textdata.org/api/v4/projects/{0}/repository/f
 GITLAB_COMMITS_URL = "https://gitlab.textdata.org/api/v4/projects/{0}/repository/commits"
 
 def create_new_project(project_name):
-    print("Creating GitLab project with name ", project_name)
     payload = { "private_token": gitlab_private_token.GITLAB_PRIVATE_TOKEN, "name": project_name }
     resp = requests.post(GITLAB_PROJECTS_URL, data=payload)
 
