@@ -506,7 +506,7 @@ def generate_eval_config(ranker, dataset):
     start_index = {'cranfield': 1, 'apnews': 0}
     print('dataset!!', dataset)
     dict = {}
-    dict['stop-words'] = "lemur-stopwords.txt"
+    dict['stop-words'] = "data/lemur-stopwords.txt"
     dict['prefix'] = "."
     dict['dataset'] = "/data/" + dataset
     dict['corpus'] = "line.toml"
