@@ -389,7 +389,7 @@ def evaluation_results(request):
    
     # Saving is done here.
     ranker = RetrievalMethod.objects.get(id=evaluation_response["db_ranker_id"])
-    dataset = evaluation_response["dataset"]
+    dataset = CONFIG["app-dataset-names"][evaluation_response["dataset"]]
 
     perf = Peformance(ranker=ranker, dataset=dataset, map=evaluation_response['map'], 
         ndcg=evaluation_response['ndcg'], elapsed_time=evaluation_response['elapsed_time'])

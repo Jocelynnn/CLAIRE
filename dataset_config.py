@@ -25,5 +25,10 @@ CONFIG = {
         "query-path": "/data/trec-robust/trec-queries",
         "stopwords": "lemur-stopwords.txt",
         "query-id-start": 1
+    },
+    "app-dataset-names": {
+        "cranfield": "cranfield",
+        "ap88-89": "apnews",
+        "trec-robust": "trec"
     }
 }
