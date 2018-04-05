@@ -386,7 +386,8 @@ def evaluation_results(request):
     '''
     Endpoint for receiving the evaluation results from the GitLab execution script.
     '''
-    evaluation_response = json.loads(request.body)
+    json_str = request.body.decode('utf8').replace("'", '"')
+    evaluation_response = json.loads(json_str)
     print("Evaluation Results: ", json.dumps(evaluation_response))
    
     # Saving is done here.
