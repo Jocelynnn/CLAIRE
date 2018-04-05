@@ -24,6 +24,7 @@ import string
 import pickle
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from dataset_config import CONFIG as DATASET_CONFIG
 
 # Create your views here.
 def post_list(request):
@@ -442,9 +443,14 @@ def get_filled_form(ranker):
 
 
 def generate_search_config(ranker, is_server=True):
+    ###
+    #
+    # TODO: This needs to be overhauled for the cloud version.
+    #
+    ###
     if is_server:
         dict = {}
-        dict['stop-words'] = "data/lemur-stopwords.txt"
+        dict['stop-words'] = "lemur-stopwords.txt"
         dict['prefix'] = "."
         dict['dataset'] = "wikipedia"
         dict['corpus'] = "line.toml"
@@ -459,7 +465,6 @@ def generate_search_config(ranker, is_server=True):
         config_params = ''
         for key, value in ranker.__dict__.items():
             key = str(key)
-            # print(key)
             if key.startswith('p_'):
                 dict['ranker'][key[2:]] = round(float(value), 4)
                 config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
@@ -481,21 +486,10 @@ def generate_search_config(ranker, is_server=True):
         config_params = ''
         for key, value in ranker.__dict__.items():
             key = str(key)
-            # print(key)
             if key.startswith('p_'):
                 dict['ranker'][key[2:]] = round(float(value), 4)
                 config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
 
-                # while True:
-                #     _num = random.randint(1, 10000)
-                #     file_name = 'c-'+str(_num) + '.toml'
-                #     base_dir = os.path.abspath(settings.BASE_DIR)
-                #     file_path = os.path.join(base_dir, file_name)
-                #     my_file = Path(file_path)
-                #     if not my_file.is_file():
-                #         with open(my_file, 'w+') as fout:
-                #             pytoml.dump(fout, dict)
-                #             break
     file_name = 'temp.toml'
     with open(file_name, 'w+') as fout:
         pytoml.dump(fout, dict)
@@ -503,44 +497,41 @@ def generate_search_config(ranker, is_server=True):
 
 
 def generate_eval_config(ranker, dataset):
-    # dataset = 'cranfield'
-    start_index = {'cranfield': 1, 'apnews': 0}
+#    start_index = {'cranfield': 1, 'apnews': 0}
     print('dataset!!', dataset)
-    dict = {}
-    dict['stop-words'] = "lemur-stopwords.txt"
 
-    dict['prefix'] = "/data"
-    dict['dataset'] = dataset
-    dict['corpus'] = "line.toml"
-    dict['index'] = dataset + "-index"
-    dict['query-judgements'] = "/data/{0}/{0}-qrels.txt".format(dataset)
+    eval_dict = {}
+    eval_dict['stop-words'] = DATASET_CONFIG[dataset]["lemur-stopwords.txt"]
 
-    dict['analyzers'] = [{'method': "ngram-word",
-                            'ngram': 1,
-                            'filter': "default-unigram-chain"}]
+    eval_dict['prefix'] = "/data"
+    eval_dict['dataset'] = dataset
+    eval_dict['corpus'] = DATASET_CONFIG[dataset]["corpus"]
 
-    dict['query-runner'] = {'query-path': "/data/{0}/{0}-queries.txt".format(dataset),
-                            'query-id-start': start_index[dataset]
-                            }
+    eval_dict['index'] = DATASET_CONFIG[dataset]["index"]
+    eval_dict['query-judgements'] = DATASET_CONFIG[dataset]["query-judgements"]
+
+    eval_dict['analyzers'] = [
+        {
+            'method': "ngram-word",
+            'ngram': 1,
+            'filter': "default-unigram-chain"
+        }
+    ]
+
+    eval_dict['query-runner'] = {
+        'query-path': DATASET_CONFIG[dataset]["query-path"],
+        'query-id-start': DATASET_CONFIG["query-id-start"]
+    }
 
     config_params = ''
     for key, value in ranker.__dict__.items():
         key = str(key)
-        # print(key)
         if key.startswith('p_'):
             config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
 
-    # while True:
-    #     _num = random.randint(1, 10000)
-    #     file_name = 'c-'+str(_num) + '.toml'
-    #     base_dir = os.path.abspath(settings.BASE_DIR)
-    #     file_path = os.path.join(base_dir, file_name)
-    #     my_file = Path(file_path)
-    #     if not my_file.is_file():
-    #         with open(my_file, 'w+') as fout:
-    #             pytoml.dump(fout, dict)
-    #             break
     file_name = 'temp.toml'
     with open(file_name, 'w+') as fout:
-        pytoml.dump(fout, dict)
+        pytoml.dump(fout, eval_dict)
+        fout.close()
+
     return file_name, config_params.strip(',')
