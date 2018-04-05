@@ -497,10 +497,10 @@ def generate_eval_config(ranker, dataset):
     print('dataset!!', dataset)
 
     eval_dict = {}
-    eval_dict['stop-words'] = DATASET_CONFIG[dataset]["lemur-stopwords.txt"]
+    eval_dict['stop-words'] = DATASET_CONFIG[dataset]["stopwords"]
 
     eval_dict['prefix'] = "/data"
-    eval_dict['dataset'] = dataset
+    eval_dict['dataset'] = DATASET_CONFIG[dataset]["name"]
     eval_dict['corpus'] = DATASET_CONFIG[dataset]["corpus"]
 
     eval_dict['index'] = DATASET_CONFIG[dataset]["index"]
@@ -516,7 +516,7 @@ def generate_eval_config(ranker, dataset):
 
     eval_dict['query-runner'] = {
         'query-path': DATASET_CONFIG[dataset]["query-path"],
-        'query-id-start': DATASET_CONFIG["query-id-start"]
+        'query-id-start': DATASET_CONFIG[dataset]["query-id-start"]
     }
 
     config_params = ''
