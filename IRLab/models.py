@@ -73,9 +73,7 @@ class Absolute_discount(RetrievalMethod):
         return "{} ({}={})".format(self.name,'delta',self.p_delta)
 
 
-
-
-class Own_retrieval(RetrievalMethod):
+class Customized_retrieval(RetrievalMethod):
     source = models.CharField(max_length=100000)
     file_location = models.CharField(max_length=200)
     ranker_id = models.CharField(max_length=70, default='CustomizedRanker')
@@ -93,28 +91,3 @@ class Peformance(models.Model):
 
     # def __str__(self):
     #     return json.dumps({'dataset': self.dataset, 'map': self._map, 'ndcg': self._ndcg, 'time': self.elapsed_time})
-
-
-class Post(models.Model):
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    text = models.TextField()
-    created_date = models.DateTimeField(
-        default=timezone.now)
-    published_date = models.DateTimeField(
-        blank=True, null=True)
-
-    def publish(self):
-        self.published_date = timezone.now()
-        self.save()
-
-    def __str__(self):
-        return self.title
-
-
-
-
-class Code(models.Model):
-    text = FroalaField(options={
-        'toolbarInline': False,
-    })
