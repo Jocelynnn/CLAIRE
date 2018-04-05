@@ -1,12 +1,12 @@
 stop-words = "lemur-stopwords.txt"
-prefix = "/data"
+prefix = "./data"
 dataset = "cranfield"
 corpus = "line.toml"
 index = "cranfield-index"
-query-judgements = "cranfield/cranfield-qrels.txt"
+query-judgements = "data/cranfield/cranfield-qrels.txt"
 
 [query-runner]
-query-path = "cranfield/cranfield-queries.txt"
+query-path = "data/cranfield/cranfield-queries.txt"
 query-id-start = 1
 
 [[analyzers]]

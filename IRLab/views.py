@@ -374,10 +374,10 @@ def evaluate(request, db_ranker_id):
         print('Failed to commit all files. Abandoning evaluation.')
 
     # Remove this. This is only for testing the script and saving.
-    # with open("exec_config.json", "w") as exec_config_file:
-    #     exec_config_file.write(json.dumps(exec_config))
-    #     exec_config_file.close()
-    #os.system("python3 execute_eval.py http://127.0.0.1:8000/evaluations/evaluation_results/")
+    with open("exec_config.json", "w") as exec_config_file:
+        exec_config_file.write(json.dumps(exec_config))
+        exec_config_file.close()
+    os.system("python3 execute_eval.py http://127.0.0.1:8000/evaluations/evaluation_results/")
 
     return redirect('show_retrievals')
 
@@ -512,13 +512,13 @@ def generate_eval_config(ranker, dataset):
     dict['dataset'] = dataset
     dict['corpus'] = "line.toml"
     dict['index'] = dataset + "-index"
-    dict['query-judgements'] = "{0}/{0}-qrels.txt".format(dataset)
+    dict['query-judgements'] = "/data/{0}/{0}-qrels.txt".format(dataset)
 
     dict['analyzers'] = [{'method': "ngram-word",
                             'ngram': 1,
                             'filter': "default-unigram-chain"}]
 
-    dict['query-runner'] = {'query-path': "{0}/{0}-queries.txt".format(dataset),
+    dict['query-runner'] = {'query-path': "/data/{0}/{0}-queries.txt".format(dataset),
                             'query-id-start': start_index[dataset]
                             }
 
