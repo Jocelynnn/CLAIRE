@@ -440,13 +440,12 @@ def get_filled_form(ranker):
 
 def generate_search_config(ranker, is_server=True):
     ###
-    #
-    # TODO: This needs to be overhauled for the cloud version.
-    #
+    # TODO: These datasets need to be added to the Azure server
+    # so that search works for that locally.
     ###
     if is_server:
         dict = {}
-        dict['stop-words'] = "lemur-stopwords.txt"
+        dict['stop-words'] = "data/lemur-stopwords.txt"
         dict['prefix'] = "."
         dict['dataset'] = "wikipedia"
         dict['corpus'] = "line.toml"
@@ -493,7 +492,6 @@ def generate_search_config(ranker, is_server=True):
 
 
 def generate_eval_config(ranker, dataset):
-#    start_index = {'cranfield': 1, 'apnews': 0}
     print('dataset!!', dataset)
 
     eval_dict = {}
