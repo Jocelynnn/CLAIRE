@@ -443,7 +443,7 @@ def generate_search_config(ranker, is_server=True):
     if is_server:
         dict = {}
         dict['stop-words'] = "lemur-stopwords.txt"
-        dict['prefix'] = "/home/bingjie3/IRLab/"
+        dict['prefix'] = "/home/bingjie3/IRLab"
         dict['dataset'] = "wikipedia"
         dict['corpus'] = "line.toml"
         dict['index'] = "wikipedia-index2"
@@ -463,7 +463,7 @@ def generate_search_config(ranker, is_server=True):
     else:
         dict = {}
         dict['stop-words'] = "lemur-stopwords.txt"
-        dict['prefix'] = "/home/bingjie3/IRLab/"
+        dict['prefix'] = "/home/bingjie3/IRLab"
         dict['dataset'] = "apnews"
         dict['corpus'] = "line.toml"
         dict['index'] = "apnews-index"
