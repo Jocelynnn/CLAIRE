@@ -440,47 +440,27 @@ def get_filled_form(ranker):
 
 
 def generate_search_config(ranker, is_server=True):
-    if is_server:
-        dict = {}
-        dict['stop-words'] = "lemur-stopwords.txt"
-        dict['prefix'] = "/home/bingjie3/IRLab"
-        dict['dataset'] = "wikipedia"
-        dict['corpus'] = "line.toml"
-        dict['index'] = "wikipedia-index2"
+    SEARCH_DATASET = "wikipedia"
 
-        dict['analyzers'] = [{'method': "ngram-word",
-                              'ngram': 1,
-                              'filter': "default-unigram-chain"}]
+    dict = {}
+    dict['stop-words'] = DATASET_CONFIG[SEARCH_DATASET]["stopwords"]
+    dict['prefix'] = DATASET_CONFIG[SEARCH_DATASET]["prefix"]
+    dict['dataset'] = DATASET_CONFIG[SEARCH_DATASET]["name"]
+    dict['corpus'] = DATASET_CONFIG[SEARCH_DATASET]["corpus"]
+    dict['index'] = DATASET_CONFIG[SEARCH_DATASET]["index"]
 
-        dict['ranker'] = {'method': ranker.ranker_id_4_config}
+    dict['analyzers'] = [{'method': "ngram-word",
+                            'ngram': 1,
+                            'filter': "default-unigram-chain"}]
 
-        config_params = ''
-        for key, value in ranker.__dict__.items():
-            key = str(key)
-            if key.startswith('p_'):
-                dict['ranker'][key[2:]] = round(float(value), 4)
-                config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
-    else:
-        dict = {}
-        dict['stop-words'] = "lemur-stopwords.txt"
-        dict['prefix'] = "/home/bingjie3/IRLab"
-        dict['dataset'] = "apnews"
-        dict['corpus'] = "line.toml"
-        dict['index'] = "apnews-index"
-        dict['query-judgements'] = "qrels.txt"
+    dict['ranker'] = {'method': ranker.ranker_id_4_config}
 
-        dict['analyzers'] = [{'method': "ngram-word",
-                              'ngram': 1,
-                              'filter': "default-unigram-chain"}]
-
-        dict['ranker'] = {'method': ranker.ranker_id_4_config}
-
-        config_params = ''
-        for key, value in ranker.__dict__.items():
-            key = str(key)
-            if key.startswith('p_'):
-                dict['ranker'][key[2:]] = round(float(value), 4)
-                config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
+    config_params = ''
+    for key, value in ranker.__dict__.items():
+        key = str(key)
+        if key.startswith('p_'):
+            dict['ranker'][key[2:]] = round(float(value), 4)
+            config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
 
     file_name = 'temp.toml'
     with open(file_name, 'w+') as fout:
@@ -494,7 +474,7 @@ def generate_eval_config(ranker, dataset):
     eval_dict = {}
     eval_dict['stop-words'] = DATASET_CONFIG[dataset]["stopwords"]
 
-    eval_dict['prefix'] = "/data"
+    eval_dict['prefix'] = DATASET_CONFIG[dataset]["prefix"]
     eval_dict['dataset'] = DATASET_CONFIG[dataset]["name"]
     eval_dict['corpus'] = DATASET_CONFIG[dataset]["corpus"]
 

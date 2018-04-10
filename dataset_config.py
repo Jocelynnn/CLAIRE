@@ -1,5 +1,6 @@
 CONFIG = {
     "cranfield": {
+        "prefix": "/data",
         "name": "cranfield",
         "corpus": "line.toml",
         "index": "/data/idx/cranfield-idx",
@@ -9,6 +10,7 @@ CONFIG = {
         "query-id-start": 1
     },
     "apnews": {
+        "prefix": "/data",
         "name": "ap88-89",
         "corpus": "gz.toml",
         "index": "/data/idx/ap88-89-idx",
@@ -18,6 +20,7 @@ CONFIG = {
         "query-id-start": 1
     },
     "trec": {
+        "prefix": "/data",
         "name": "trec-robust",
         "corpus": "gz.toml",
         "index": "/data/idx/trec-robust-idx",
@@ -25,6 +28,13 @@ CONFIG = {
         "query-path": "/data/trec-robust/trec-queries",
         "stopwords": "lemur-stopwords.txt",
         "query-id-start": 1
+    },
+    "wikipedia": {
+        "prefix": "/home/bingjie3/IRLab",
+        "name": "wikipedia",
+        "corpus": "line.toml",
+        "index": "/home/bingjie3/IRLab/wikipedia-index2",
+        "stopwords": "lemur-stopwords.txt"
     },
     "app-dataset-names": {
         "cranfield": "cranfield",
