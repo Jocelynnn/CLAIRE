@@ -4,8 +4,6 @@ import json
 import sys
 
 if __name__ == "__main__":
-    RESULTS_ADDR = sys.argv[1]
-
     config = json.loads(open('exec_config.json').read())
     command = config["command"]
 
@@ -19,5 +17,6 @@ if __name__ == "__main__":
     config = json.loads(open('exec_config.json').read())
     response["project_name"] = config["project_name"]
     response["db_ranker_id"] = config["db_ranker_id"]
+    results_addr = config["host"] + "/evaluations/evaluation_results/"
 
-    requests.post(RESULTS_ADDR, json=response)
+    requests.post(results_addr, json=response)

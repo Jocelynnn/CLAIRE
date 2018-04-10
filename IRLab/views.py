@@ -361,7 +361,8 @@ def evaluate(request, db_ranker_id):
             exec_config = {
                 "command": command,
                 "db_ranker_id": db_ranker_id,
-                "project_name": RANDOM_PROJECT_NAME    
+                "project_name": RANDOM_PROJECT_NAME,
+                "host": request.get_host()    
             }
             files_contents.append(json.dumps(exec_config))
         else:
@@ -375,7 +376,7 @@ def evaluate(request, db_ranker_id):
     #     exec_config_file.write(json.dumps(exec_config))
     #     exec_config_file.close()
     # os.system("python3 execute_eval.py http://127.0.0.1:8000/evaluations/evaluation_results/")
-
+    print("Results will be sent to: ", exec_config["host"])
     return redirect('show_retrievals')
 
 @csrf_exempt
