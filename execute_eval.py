@@ -17,6 +17,6 @@ if __name__ == "__main__":
     config = json.loads(open('exec_config.json').read())
     response["project_name"] = config["project_name"]
     response["db_ranker_id"] = config["db_ranker_id"]
-    results_addr = config["host"] + "/evaluations/evaluation_results/"
+    results_addr = "http://{0}/evaluations/evaluation_results/".format(config["host"])
 
     requests.post(results_addr, json=response)
