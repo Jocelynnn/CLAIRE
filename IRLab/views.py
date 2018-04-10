@@ -440,14 +440,10 @@ def get_filled_form(ranker):
 
 
 def generate_search_config(ranker, is_server=True):
-    ###
-    # TODO: These datasets need to be added to the Azure server
-    # so that search works for that locally.
-    ###
     if is_server:
         dict = {}
-        dict['stop-words'] = "data/lemur-stopwords.txt"
-        dict['prefix'] = "."
+        dict['stop-words'] = "lemur-stopwords.txt"
+        dict['prefix'] = "/home/bingjie3/IRLab/"
         dict['dataset'] = "wikipedia"
         dict['corpus'] = "line.toml"
         dict['index'] = "wikipedia-index2"
@@ -466,8 +462,8 @@ def generate_search_config(ranker, is_server=True):
                 config_params += key[2:] + '=' + str(round(float(value), 4)) + ","
     else:
         dict = {}
-        dict['stop-words'] = "data/lemur-stopwords.txt"
-        dict['prefix'] = "."
+        dict['stop-words'] = "lemur-stopwords.txt"
+        dict['prefix'] = "/home/bingjie3/IRLab/"
         dict['dataset'] = "apnews"
         dict['corpus'] = "line.toml"
         dict['index'] = "apnews-index"
