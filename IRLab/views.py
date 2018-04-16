@@ -25,45 +25,38 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from dataset_config import CONFIG as DATASET_CONFIG
 
-# Create your views here.
-
 
 def show_home(request):
     return render(request, 'home/home.html')
 
 
-# @login_required
-# # TODO REMOVE LATER
-# def show_rankers2(request):
-#     table = RankerTable(RetrievalMethod.objects.filter(author=request.user))
-#     RequestConfig(request).configure(table)
-#     return render(request, 'retrieval/myrankers.html', {'table': table})
-
-
-# show all retrieval functions created by current use
+# show all retrieval functions created by current user
 @login_required
 def show_rankers(request):
     rankers = RetrievalMethod.objects.filter(author=request.user)
     ranker_perfs = defaultdict()
     ranker_forms = defaultdict()
+    unevaluated_rankers = []
+
     for ranker in rankers:
         perfs = Peformance.objects.filter(ranker=ranker).order_by('dataset')
         perfs_dict = {}  # dataset - perfs mapping, used for rendering
         for perf in perfs:
             perfs_dict[perf.dataset] = perf
 
+        if len(perfs_dict) == 0:
+            unevaluated_rankers.append(ranker.id)
+
         ranker_perfs[ranker] = perfs_dict
+
         curt_form = get_filled_form(ranker)
         for key in curt_form.fields.keys():
             curt_form.fields[key].widget.attrs['readonly'] = True
             curt_form.fields[key].widget.attrs['class'] = 'form-control'
         ranker_forms[ranker.id] = curt_form
 
-    # print(ranker_perfs)
-    # print(rankers)
-    # print(ranker_forms)
     return render(request, 'retrieval/myRetrievals.html',
-                  {'rankers': rankers, 'ranker_perfs': ranker_perfs.items(), 'ranker_forms': ranker_forms})
+                  {'rankers': rankers, 'unevaluated_rankers': unevaluated_rankers, 'ranker_perfs': ranker_perfs.items(), 'ranker_forms': ranker_forms})
 
 
 def show_new_retrieval_configs(request):
@@ -378,6 +371,20 @@ def evaluate(request, db_ranker_id):
     # os.system("python3 execute_eval.py http://127.0.0.1:8000/evaluations/evaluation_results/")
     print("Results will be sent to: ", exec_config["host"])
     return redirect('show_retrievals')
+
+@csrf_exempt
+def poll_evaluation_results(request):
+    json_str = request.body.decode('utf8').replace("'", '"')
+    unevaluated_ranker_ids = json.loads(json_str)["rankers"]
+
+    rankers = RetrievalMethod.objects.filter(id__in=unevaluated_ranker_ids)
+
+    for ranker in rankers:
+        perfs = Peformance.objects.filter(ranker=ranker).order_by('dataset')
+        if len(perfs) > 0:
+            return HttpResponse("200")
+
+    return HttpResponse("201")
 
 @csrf_exempt
 def evaluation_results(request):

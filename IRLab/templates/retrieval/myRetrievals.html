@@ -64,9 +64,8 @@
                         </td>
 
                         {% with my_array='apnews cranfield trec' %}
-                            {#                            {% with my_array='apnews cranfield trec' %}#}
                             {% for item in my_array.split %}
-                                {#                        list all evaluations #}
+                                {# list all evaluations #}
                                 {% if perfs_dict %}
                                     {% if perfs_dict|lookup:item %}
                                         {% with perfs_dict|lookup:item as curt_perf %}
@@ -85,7 +84,7 @@
                                         </td>
                                     {% endif %}
                                 {% else %}
-                                    {#                            no evaluation data point#}
+                                    {# no evaluation data point #}
                                     <td colspan="2">
                                         <form method="post" action="{% url 'evaluate' ranker.id %}">
                                             {% csrf_token %}
@@ -114,23 +113,10 @@
 
         </div>
     </main>
-
-    {#    <div class="col-md-6"></div>#}
-    {#    <div class="col-md-4">#}
-    {#        {% if ranker_perfs %}#}
-    {#            <h1>ahahhahaaaaaaaaaaaaaaaa</h1>#}
-    {#            {{ ranker_perfs }}#}
-    {#            {% for ranker,perf_list in  ranker_perfs %}#}
-    {#                <h1>{{ ranker }}</h1>#}
-    {#                {{ perf_list }}#}
-    {#                {% for perf in perf_list %}#}
-    {#                    <h1>{{ perf.map }}</h1>#}
-    {#                {% endfor %}#}
-    {#            {% endfor %}#}
-    {#        {% endif %}#}
-    {#    </div>#}
-    {#    <div class="col-md-4"></div>#}
-
-
+    <script type="text/javascript">
+        var unevaluatedRankers = JSON.parse("{{unevaluated_rankers | safe}}");
+    </script>
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/retrieval.js"></script>
 
 {% endblock %}
