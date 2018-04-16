@@ -1,4 +1,4 @@
-const POLL_INTERVAL = 3000; // 30 seconds
+const POLL_INTERVAL = 30000; // 30 seconds
 const POLL_URL = "/poll/evaluation/update"
 /**
  * Polls the django server checking for changes in ranking function evaluations.
