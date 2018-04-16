@@ -5,8 +5,8 @@ const POLL_URL = "/poll/evaluation/update"
  * If a change is detected, the page is reloaded to apply the changes.
  */
 const pollForEvaluationResults = function() {
-    $.post(POLL_URL, data=JSON.stringify({rankers: unevaluatedRankers}), function(response) {
-        if (response == 200) {
+    $.post(POLL_URL, data=JSON.stringify({rankers: evalRankers}), function(response) {
+        if (response == "200") {
             location.reload(true);
         }
     });

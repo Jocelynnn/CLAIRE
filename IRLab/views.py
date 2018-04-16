@@ -36,7 +36,7 @@ def show_rankers(request):
     rankers = RetrievalMethod.objects.filter(author=request.user)
     ranker_perfs = defaultdict()
     ranker_forms = defaultdict()
-    unevaluated_rankers = []
+    eval_rankers = []
 
     for ranker in rankers:
         perfs = Peformance.objects.filter(ranker=ranker).order_by('dataset')
@@ -44,8 +44,7 @@ def show_rankers(request):
         for perf in perfs:
             perfs_dict[perf.dataset] = perf
 
-        if len(perfs_dict) == 0:
-            unevaluated_rankers.append(ranker.id)
+        eval_rankers.append([ranker.id, len(perfs)])
 
         ranker_perfs[ranker] = perfs_dict
 
@@ -56,7 +55,7 @@ def show_rankers(request):
         ranker_forms[ranker.id] = curt_form
 
     return render(request, 'retrieval/myRetrievals.html',
-                  {'rankers': rankers, 'unevaluated_rankers': unevaluated_rankers, 'ranker_perfs': ranker_perfs.items(), 'ranker_forms': ranker_forms})
+                  {'rankers': rankers, 'eval_rankers': eval_rankers, 'ranker_perfs': ranker_perfs.items(), 'ranker_forms': ranker_forms})
 
 
 def show_new_retrieval_configs(request):
@@ -375,16 +374,19 @@ def evaluate(request, db_ranker_id):
 @csrf_exempt
 def poll_evaluation_results(request):
     json_str = request.body.decode('utf8').replace("'", '"')
-    unevaluated_ranker_ids = json.loads(json_str)["rankers"]
-
-    rankers = RetrievalMethod.objects.filter(id__in=unevaluated_ranker_ids)
+    eval_rankers = json.loads(json_str)["rankers"]
+    id_to_perf_num = {rank[0]: rank[1] for rank in eval_rankers}
+    rankers = RetrievalMethod.objects.filter(author=request.user)
 
     for ranker in rankers:
         perfs = Peformance.objects.filter(ranker=ranker).order_by('dataset')
-        if len(perfs) > 0:
-            return HttpResponse("200")
+        new_num_perfs = len(perfs)
+        old_num_perfs = id_to_perf_num[ranker.id]
 
-    return HttpResponse("201")
+        if new_num_perfs != old_num_perfs:
+            return HttpResponse("200", status=200)
+
+    return HttpResponse("201", status=201)
 
 @csrf_exempt
 def evaluation_results(request):
