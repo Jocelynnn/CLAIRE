@@ -7,7 +7,7 @@ const POLL_URL = "/poll/evaluation/update"
 const pollForEvaluationResults = function() {
     $.post(POLL_URL, data=JSON.stringify({rankers: unevaluatedRankers}), function(response) {
         if (response == 200) {
-            location.reload();
+            location.reload(true);
         }
     });
 }
