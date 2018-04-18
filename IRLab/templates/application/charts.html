@@ -9,7 +9,7 @@
         google.load("visualization", "1", {packages: ["corechart"]});
     </script>
     <script type="text/javascript">
-        {#    hard coded for b,25 ranker....#}
+        {#    hard coded for bm25 ranker....#}
         var dictionary = {};
         dictionary['Okapi BM25'] = ['Analysis target','p_k1','p_b','p_k3'];
         dictionary['Pivoted Length Normalization'] = ['Analysis target','p_k1'];
@@ -35,7 +35,6 @@
 
 
     <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
-
         <form method="post" action="{% url 'perf_analysis' %}">
             {% csrf_token %}
             <select name="dataset-dropdown">
@@ -43,7 +42,6 @@
                 <option value="apnews" {% if dataset == 'apnews' %} selected="selected" {% endif %}>Apnews</option>
                 <option value="cranfield" {% if dataset == 'cranfield' %} selected="selected" {% endif %}>Cranfield
                 </option>
-
             </select>
 
             <select name="ranker-dropdown"  onchange="configureParamLists(this,document.getElementById('param_target'))" id = 'ranker_target'>

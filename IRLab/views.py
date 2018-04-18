@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.utils import timezone
 from .models import RetrievalMethod, Peformance
 from .forms import bm25Form, jmForm, dpForm, plForm, adForm, ownRetrievalForm, ownRetrievalFormForDisplay
 import json
