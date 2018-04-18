@@ -162,6 +162,7 @@ def show_perfs_analysis(request):
     if request.method == 'POST':
         dataset = request.POST.get('dataset-dropdown', None)
         ranker_name = request.POST.get('ranker-dropdown', None)
+        curt_param = request.POST.get('curt-param-dropdown', None)
 
         print(dataset)
         print(ranker_name)
@@ -172,29 +173,28 @@ def show_perfs_analysis(request):
 
         params = []
         data = []
-        if len(rankers) > 0:
+
+        if len(rankers) > 0 and len(perfs) > 0:
             ranker = rankers[0]
             for key, value in ranker.__dict__.items():
                 key = str(key)
                 # print(key)
                 if key.startswith('p_'):
-                    params.append((key, str(key[2:]).upper()))
+                    params.append(key)
 
-            # only support ranker with one parameter
-            if len(params) > 1:
-                print('not valid')
-            else:
+            if curt_param is None:
+                # no selection means only one parameter
+                curt_param = params[0]
+            data.append([curt_param, 'Map'])
 
-                data.append([params[0][1], 'Map'])
-                param_map = [(perf.ranker.__getattribute__(params[0][0]), perf.map) for perf in perfs]
-                param_map = sorted(param_map, key=lambda pair: pair[0])
+            param_map = [(perf.ranker.__getattribute__(curt_param), perf.map) for perf in perfs]
+            param_map = sorted(param_map, key=lambda pair: pair[0])
 
-                for pair in param_map:
-                    data.append([pair[0], pair[1]])
-
+            for pair in param_map:
+                data.append([pair[0], pair[1]])
 
     else:
-        # start from DL ranker
+        # start from DL ranker and apnews
         dataset = 'apnews'
         ranker_name = 'Dirichlet Prior Smoothing'
 
@@ -203,6 +203,8 @@ def show_perfs_analysis(request):
 
         data = []
         data.append(['Mu', 'Map'])
+        curt_param = 'p_mu'
+        params = ['p_mu']
         param_map = [(perf.ranker.p_mu, perf.map) for perf in perfs]
         param_map = sorted(param_map, key=lambda pair: pair[0])
         for pair in param_map:
@@ -211,20 +213,22 @@ def show_perfs_analysis(request):
     # DataSource object
     data_source = SimpleDataSource(data=data)
     # Chart object
+    x_axis = 'params' if curt_param is None else 'Param_' + curt_param[2:]
     options = {
-        'title': 'Dirichlet Prior: Mu-Map',
+        'title': "{} : {} - {}".format(ranker_name, x_axis, 'Map'),
         'curveType': 'function',
         'width': '900',
         'height': '500',
         'hAxis': {
-            'title': 'Mu'
+            'title': x_axis
         },
         'vAxis': {
             'title': 'Map'
         },
     }
     chart = LineChart(data_source, options=options)
-    context = {'chart': chart, 'dataset': dataset, 'ranker_name': ranker_name}
+    context = {'chart': chart, 'dataset': dataset, 'ranker_name': ranker_name, 'params': params,
+               'curt_param': curt_param}
 
     return render(request, 'application/charts.html', context)
 

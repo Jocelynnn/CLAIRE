@@ -8,9 +8,33 @@
     <script type="text/javascript">
         google.load("visualization", "1", {packages: ["corechart"]});
     </script>
+    <script type="text/javascript">
+        {#    hard coded for b,25 ranker....#}
+        var dictionary = {};
+        dictionary['Okapi BM25'] = ['Analysis target','p_k1','p_b','p_k3'];
+        dictionary['Pivoted Length Normalization'] = ['Analysis target','p_k1'];
+        dictionary['Dirichlet Prior Smoothing'] = ['Analysis target','p_mu'];
+        dictionary['Jelinek-Mercer Smoothing'] = ['Analysis target','p_lambda'];
+        dictionary['Absolute Discount Smoothing'] = ['Analysis target','p_delta'];
+
+        function configureParamLists(ranker_dropdown,param_dropdown) {
+            param_dropdown.options.length = 0;
+            console.log(ranker_dropdown.value);
+            for (i = 0; i < dictionary[ranker_dropdown.value].length; i++) {
+                createOption(param_dropdown, dictionary[ranker_dropdown.value][i], dictionary[ranker_dropdown.value][i]);
+            }
+            param_dropdown.selectedIndex = 1;
+        }
+        function createOption(dropdown, text, value) {
+            var opt = document.createElement('option');
+            opt.value = value;
+            opt.text = text;
+            dropdown.options.add(opt);
+        }
+    </script>
+
 
     <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
-
 
         <form method="post" action="{% url 'perf_analysis' %}">
             {% csrf_token %}
@@ -22,10 +46,10 @@
 
             </select>
 
-            <select name="ranker-dropdown">
-                <option class="dropdown-item" selected="selected" disabled>Retrival Function</option>
-                <option value="Okapi BM25" {% if ranker_name == 'Okapi BM25' %} selected="selected"{% endif %}>Okapi
-                    BM25
+            <select name="ranker-dropdown"  onchange="configureParamLists(this,document.getElementById('param_target'))" id = 'ranker_target'>
+                <option class="dropdown-item" selected="selected" disabled >Retrival Function</option>
+                <option value="Okapi BM25" {% if ranker_name == 'Okapi BM25' %}
+                        selected="selected"{% endif %}>Okapi BM25
                 </option>
                 <option value="Pivoted Length Normalization" {% if ranker_name == 'Pivoted Length Normalization' %}
                         selected="selected"{% endif %}>Pivoted Length Normalization
@@ -39,7 +63,15 @@
                 <option value="Absolute Discount Smoothing" {% if ranker_name == 'Absolute Discount Smoothing' %}
                         selected="selected"{% endif %}>Absolute Discount Smoothing
                 </option>
+            </select>
 
+            <select name="curt-param-dropdown" id = 'param_target'>
+                <option class="dropdown-item" selected="selected" disabled >Analysis target</option>
+                {% for param in params %}
+                    <option value={{ param }} {% if curt_param == param %}
+                            selected="selected"{% endif %}>{{ param }}
+                    </option>
+                {% endfor %}
             </select>
             <button class="btn btn-outline-primary" type="submit">Analyze</button>
         </form>

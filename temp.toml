@@ -1,12 +1,13 @@
 stop-words = "data/lemur-stopwords.txt"
 prefix = "."
-dataset = "wikipedia"
+dataset = "cranfield"
 corpus = "line.toml"
-index = "wikipedia-index2"
+index = "cranfield-index"
+query-judgements = "data/cranfield-qrels.txt"
 
-[ranker]
-method = "dirichlet-prior"
-mu = 2000.00000000000000000
+[query-runner]
+query-path = "data/cranfield-queries.txt"
+query-id-start = 1
 
 [[analyzers]]
 method = "ngram-word"
