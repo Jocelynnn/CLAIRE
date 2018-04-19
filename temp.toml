@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-stop-words = "data/lemur-stopwords.txt"
-prefix = "."
-dataset = "cranfield"
-corpus = "line.toml"
-index = "cranfield-index"
-query-judgements = "data/cranfield-qrels.txt"
-
-[query-runner]
-query-path = "data/cranfield-queries.txt"
-=======
 stop-words = "lemur-stopwords.txt"
 prefix = "/data"
 dataset = "trec-robust"
@@ -18,7 +7,6 @@ query-judgements = "/data/trec-robust/trec-qrel"
 
 [query-runner]
 query-path = "/data/trec-robust/trec-queries"
->>>>>>> 0f1ecab4c7a9c9632c4b416b00aa39c986ef02fa
 query-id-start = 1
 
 [[analyzers]]
