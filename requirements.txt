@@ -16,4 +16,4 @@ django-froala-editor
 django-codemirror2
 django_chartit
 django-graphos
-
+scipy

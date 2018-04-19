@@ -55,6 +55,7 @@ if __name__ == '__main__':
     response = {'ranker_id': ranker_id}
     accu_ndcg = 0.0
     count = 0
+    avg_p_list = []
     with open(query_path) as query_file:
         for query_num, line in enumerate(query_file):
             query.content(line.strip())
@@ -62,11 +63,13 @@ if __name__ == '__main__':
             avg_p = ev.avg_p(results, query_start + query_num, top_k)
             accu_ndcg += ev.ndcg(results, query_start + query_num, top_k)
             count += 1
+            avg_p_list.append(str(round(float(avg_p),4)))
             # print("Query {} average precision: {}".format(query_num + 1, avg_p))
     response['map'] = round(float(ev.map()), 4)
     response['elapsed_time'] = round(time.time() - start_time, 4)
     response['ndcg'] = round(float(accu_ndcg / count), 4)
     response['dataset'] = cfg_d['dataset']
+    response['avg_p_list'] = '|'.join(avg_p_list)
 
     print(json.dumps(response, indent=2))
     # print("Mean average precision: {}".format(ev.map()))

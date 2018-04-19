@@ -15,6 +15,7 @@ from pathlib import Path
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import LineChart
 import subprocess
+from scipy import stats
 
 
 # Create your views here.
@@ -232,6 +233,32 @@ def show_perfs_analysis(request):
     return render(request, 'application/charts.html', context)
 
 
+def compare_avg_precision(request):
+    rankers = RetrievalMethod.objects.filter(author=request.user)
+    ap_perfs = Peformance.objects.filter(ranker__in=rankers, dataset='apnews')
+    cranfield_perfs = Peformance.objects.filter(ranker__in=rankers, dataset='cranfield')
+
+    if request.method == 'POST':
+        perf1_id = request.POST.get('perf1', None)
+        perf2_id = request.POST.get('perf2', None)
+
+        if perf1_id is not None and perf2_id is not None:
+            perf1 = Peformance.objects.get(id=perf1_id)
+            perf2 = Peformance.objects.get(id=perf2_id)
+
+            per1_list = [float(num) for num in perf1.avg_p_list.split('|')]
+            per2_list = [float(num) for num in perf2.avg_p_list.split('|')]
+            t_test_result = stats.ttest_ind(per1_list, per2_list)
+
+            perf1_str = perf1.avg_p_list.replace('|','\n')
+            perf2_str = perf2.avg_p_list.replace('|','\n')
+
+            context = {'ap_perfs': ap_perfs, 'cranfield_perfs': cranfield_perfs, 'perf1': perf1, 'perf2': perf2,
+                       'perf1_str': perf1_str, 'perf2_str':perf2_str, 't_test_result': t_test_result}
+    else:
+        context = {'ap_perfs': ap_perfs, 'cranfield_perfs': cranfield_perfs}
+    return render(request, 'application/compare_avg_precision.html', context)
+
 def compare_query(request):
     rankers = RetrievalMethod.objects.filter(author=request.user)
     if request.method == 'POST':
@@ -256,7 +283,6 @@ def compare_query(request):
         context = {'ranker_list': rankers}
     return render(request, 'application/compare_query.html', context)
 
-
 def search(request):
     if request.method == 'POST':
         ranker = RetrievalMethod.objects.get(id=request.POST.get('id', None))
@@ -266,7 +292,6 @@ def search(request):
         return render(request, 'application/demo.html',
                       {'ranker_name': ranker.name, 'response': response, 'id': ranker.id,
                        'ranker_id': ranker.ranker_id})
-
 
 def search_helper(ranker, query):
     # print(query)
@@ -301,7 +326,6 @@ def search_helper(ranker, query):
     # print(output)
     response = json.loads(output)
     return response
-
 
 def evaluate(request, id):
     '''
@@ -341,11 +365,11 @@ def evaluate(request, id):
     # print(response)
 
     perf = Peformance(ranker=ranker, dataset=dataset, map=response['map'],
-                      ndcg=response['ndcg'], elapsed_time=response['elapsed_time'])
+                      ndcg=response['ndcg'], elapsed_time=response['elapsed_time'],
+                      avg_p_list=response['avg_p_list'])
     perf.save()
 
     return redirect('show_retrievals')
-
 
 def get_empty_form(ranker_name):
     if ranker_name == 'Okapi BM25':
@@ -362,7 +386,6 @@ def get_empty_form(ranker_name):
         curt_form = ownRetrievalForm()
     return curt_form
 
-
 def get_filled_form(ranker):
     if ranker.name == 'Okapi BM25':
         curt_form = bm25Form(instance=ranker)
@@ -377,7 +400,6 @@ def get_filled_form(ranker):
     else:
         curt_form = ownRetrievalFormForDisplay(instance=ranker)
     return curt_form
-
 
 def generate_search_config(ranker, is_server=True):
     if is_server:
@@ -438,7 +460,6 @@ def generate_search_config(ranker, is_server=True):
     with open(file_name, 'w+') as fout:
         pytoml.dump(fout, dict)
     return file_name, config_params.strip(',')
-
 
 def generate_eval_config(ranker, dataset):
     # dataset = 'cranfield'

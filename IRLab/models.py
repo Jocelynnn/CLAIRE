@@ -82,6 +82,7 @@ class Peformance(models.Model):
     map = models.FloatField()
     ndcg = models.FloatField()
     elapsed_time = models.FloatField()
+    avg_p_list = models.CharField(max_length=100000)
 
-    # def __str__(self):
-    #     return json.dumps({'dataset': self.dataset, 'map': self._map, 'ndcg': self._ndcg, 'time': self.elapsed_time})
+    def __str__(self):
+        return "{}: map = {}".format(self.ranker.name, self.map)

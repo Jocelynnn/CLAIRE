@@ -1,0 +1,118 @@
+{% extends "application/analysis_base.html" %}
+
+
+
+{% block analysis %}
+
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
+
+        {#        <div class="text-center">#}
+        {#            <h1>Select two retrieval functions</h1>#}
+        {#        </div>#}
+
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <h3 class="text-primary">Select two evaluation epochs</h3>
+                </div>
+            </div>
+
+
+            <form method="post" action="{% url 'compare_avg_precision' %}">
+                <div class="row">
+                    <div class="mx-auto" style="width: 850px;">
+
+                        {% csrf_token %}
+                        <select name="perf1">
+                            <option class="dropdown-item" selected="selected" disabled>Select from evalution results
+                            </option>
+
+                            <optgroup label="Apnews">
+                                {% for perf in ap_perfs %}
+                                    <option value="{{ perf.id }}" {% if perf1 and perf.id == perf1.id %}
+                                            selected="selected" {% endif %}>{{ perf }}
+                                    </option>
+                                {% endfor %}
+                            </optgroup>
+
+                            <optgroup label="Cranfield">
+                                {% for perf in cranfield_perfs %}
+                                    <option value="{{ perf.id }}" {% if perf1 and perf.id == perf1.id %}
+                                            selected="selected" {% endif %}>{{ perf }}
+                                    </option>
+                                {% endfor %}
+                            </optgroup>
+
+                        </select>
+
+                        <select name="perf2">
+                            <option class="dropdown-item" selected="selected" disabled>Select from evalution results
+                            </option>
+
+                            <optgroup label="Apnews">
+                                {% for perf in ap_perfs %}
+                                    <option value="{{ perf.id }}" {% if perf2 and perf.id == perf2.id %}
+                                            selected="selected" {% endif %}>{{ perf }}
+                                    </option>
+                                {% endfor %}
+                            </optgroup>
+
+                            <optgroup label="Cranfield">
+                                {% for perf in cranfield_perfs %}
+                                    <option value="{{ perf.id }}" {% if perf2 and perf.id == perf2.id %}
+                                            selected="selected" {% endif %}>{{ perf }}
+                                    </option>
+                                {% endfor %}
+                            </optgroup>
+
+                        </select>
+                        <button class="btn btn-outline-primary" type="submit">Calculate now</button>
+                    </div>
+                </div>
+            </form>
+
+
+            {% if t_test_result and perf1 and perf2 %}
+                <div class="row">
+
+                    <div class="col-sm-12">
+
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ perf1 }}</th>
+                                <th>{{ perf2 }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <td colspan="2">
+                                    {{ t_test_result }}
+                                </td>
+                            </tr>
+                            {% if  perf1_str and perf2_str %}
+                                <tr>
+                                    <td>
+                                        <textarea style="height: 250px">{{ perf1_str }}</textarea>
+                                    </td>
+                                    <td>
+                                        <textarea style="height: 250px">{{ perf2_str }}</textarea>
+                                    </td>
+                                </tr>
+                            {% endif %}
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+
+    </main>
+
+
+{% endblock %}

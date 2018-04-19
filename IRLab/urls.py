@@ -18,5 +18,7 @@ urlpatterns = [
     url(r'^applications/search/$', views.search, name='search'),
     url(r'^applications/analysis-charts/$', views.show_perfs_analysis, name='perf_analysis'),
     url(r'^applications/analysis-compare/$', views.compare_query, name='compare_query'),
+    url(r'^applications/analysis-statistical-test/$', views.compare_avg_precision, name='compare_avg_precision'),
+
 
 ]
