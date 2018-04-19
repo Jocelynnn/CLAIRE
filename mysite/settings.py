@@ -25,7 +25,8 @@ SECRET_KEY = '6-0*^0e-w6*z3#&4$!h5h2$7aes0@s@1@a#8fq+0smh)lmo6f0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['bingjie3.pythonanywhere.com','127.0.0.1','timan103.cs.illinois.edu']
+# 40.71.179.177 is the IP address of the Azure instance this is hosted on.
+ALLOWED_HOSTS = ['bingjie3.pythonanywhere.com','127.0.0.1','timan103.cs.illinois.edu', '40.71.179.177', 'timan102.cs.illinois.edu']
 
 
 # Application definition
@@ -80,23 +81,23 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'claire',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'claire',
+#         'USER': 'postgres',
+#         'PASSWORD': 'admin',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 
 
 # Password validation
