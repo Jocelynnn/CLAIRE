@@ -12,3 +12,4 @@ class PerfTable(tables.Table):
     class Meta:
         model = Peformance
         template_name = 'django_tables2/bootstrap-responsive.html'
+        exclude = ('avg_p_list','id',)
